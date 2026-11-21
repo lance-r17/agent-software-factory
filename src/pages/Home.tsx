@@ -85,7 +85,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
 
     <section className="method-section" id="method">
       <div className="method-grid page-width">
-        <div><span className="hand-label">02 · OUR METHOD</span><h2>{isEnglish ? 'One solution a day.<br />Four evidence layers.' : <>每天一个方案，<br />四层证据拆解。</>}</h2><p>{isEnglish ? 'We evaluate each open-source project as a production candidate, not a promotional page. Official facts and local checks are labeled separately.' : '不把开源项目写成宣传页，而是当成一次生产候选评估。官方事实与本地实测分开标注。'}</p></div>
+        <div><span className="hand-label">02 · OUR METHOD</span><h2>{isEnglish ? <>One solution a day.<br />Four evidence layers.</> : <>每天一个方案，<br />四层证据拆解。</>}</h2><p>{isEnglish ? 'We evaluate each open-source project as a production candidate, not a promotional page. Official facts and local checks are labeled separately.' : '不把开源项目写成宣传页，而是当成一次生产候选评估。官方事实与本地实测分开标注。'}</p></div>
         <ol className="method-list">
           <li><span>1</span><div><strong>{isEnglish ? 'Architecture map' : '架构地图'}</strong><p>{isEnglish ? 'Core components, data flow, model and tool boundaries, and extension interfaces.' : '核心组件、数据流、模型与工具边界、扩展接口。'}</p></div></li>
           <li><span>2</span><div><strong>{isEnglish ? 'Reproduction manual' : '复现手册'}</strong><p>{isEnglish ? 'Dependencies, exact commands, configuration templates, directory layout, and verification.' : '依赖版本、精确命令、配置模板、目录结构与验证结果。'}</p></div></li>

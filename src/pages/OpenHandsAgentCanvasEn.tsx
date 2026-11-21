@@ -5,7 +5,7 @@ import { CodeBlock, SectionHeading, SourceLink, SourceStrip, copyText } from '..
 import { DeploySkillCard } from '../components/DeploySkill'
 import { PageShell } from '../components/Layout'
 import { RouteTabs } from '../components/RouteTabs'
-import { ArchitectureDiagram, AutomationDiagram, DataEventDiagram, DeploymentDiagram, WorkflowDiagram } from '../components/OpenHandsDiagramsEn'
+import { ArchitectureDiagram, DataEventDiagram, DeploymentDiagram, WorkflowDiagram } from '../components/OpenHandsDiagramsEn'
 import { openHandsDeploySkillEn } from '../data/deploySkillsEn'
 
 const VERIFY_DATE = '2026-11-20'
@@ -58,34 +58,6 @@ ps aux | grep -E 'openhands|uvicorn'
 ss -lntp | grep 12000
 tail -n 120 /srv/openhands/agent-server.log
 # The public /health path was not proven in this check; if it 404s, use logs and process status instead.`
-
-const GITHUB_ACTION = `# .github/workflows/openhands-resolver.yml — template; review before enabling
-name: OpenHands issue resolver
-on:
-  issue_comment:
-    types: [created]
-
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-
-jobs:
-  resolve:
-    if: contains(github.event.comment.body, '/fix-me')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: pip install openhands-resolver
-      - run: openhands-resolver --repo \${{ github.repository }} --issue-number \${{ github.event.issue.number }}
-        env:
-          LLM_API_KEY: \${{ secrets.LLM_API_KEY }}
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
-# Before production, constrain the trigger, fork trust boundary, model, and budget;
-# do not give untrusted Issue text direct write or merge privileges.`
 
 function CopyPageLink() {
   const [copied, setCopied] = useState(false)
@@ -218,10 +190,24 @@ export default function OpenHandsAgentCanvasEn() {
       </section>
 
       <section className="page-width detail-section" id="automation">
-        <SectionHeading kicker="08 · AUTOMATION GATE" title="Automation belongs outside the desktop client" intro="Canvas is a control surface, not the queueing and approval system. Let an outer orchestrator own triggers, credentials, retries, CI, and merge policy." />
-        <AutomationDiagram />
-        <div className="automation-layout"><CodeBlock title="03 · Illustrative GitHub resolver workflow" code={GITHUB_ACTION} language="yaml" /><div className="automation-notes"><h3>Answer these before integration</h3><ol><li><span>1</span><p><strong>Who can trigger?</strong> Issue and comment text is untrusted. Require maintainer approval for public repositories and forks.</p></li><li><span>2</span><p><strong>What can it write?</strong> Limit the token to the target repository and required operations; never grant automatic merge by default.</p></li><li><span>3</span><p><strong>What counts as success?</strong> A diff plus clean-checkout CI, secret scanning, and human review—not merely a finished Agent process.</p></li><li><span>4</span><p><strong>How does retry work?</strong> Use a fresh run ID, workspace, and sandbox; preserve the failed evidence rather than replaying blindly.</p></li></ol></div></div>
-        <div className="config-warning"><AlertTriangle /><p><strong>Workflow template, not a verified turnkey integration:</strong> resolver command flags and event filters must be checked against the exact release before enabling. Keep branch protection and required reviews outside the Agent’s control.</p></div>
+        <SectionHeading kicker="08 · AUTOMATION GATE" title="Software factory integration: three tokens, three identities, four pipeline stages" intro="This configuration chain comes from the official Software Factory guide. The core principle is least privilege: each role receives only the GitHub permissions required for its stage, and the reviewer cannot even push." />
+        <div className="component-table-wrap">
+          <table className="component-table"><caption className="sr-only">Least-privilege design for the software factory’s three GitHub tokens</caption><thead><tr><th>Token / Profile</th><th>Repository permissions</th><th>Role in the pipeline</th><th>Deliberately withheld</th></tr></thead><tbody>
+            <tr><th><span className="component-chip yellow">factory-triage</span></th><td>Contents: read; Issues: read/write</td><td>Prioritizes work, checks dependencies, writes acceptance criteria, and applies ready-for-dev.</td><td>No code-write permission.</td></tr>
+            <tr><th><span className="component-chip green">factory-developer</span></th><td>Contents / Issues / PRs: read/write; Actions and statuses: read</td><td>Starts from labels, creates factory/issue-prefixed branches, and opens PRs.</td><td>No merge decision; workflow write is not granted by default.</td></tr>
+            <tr><th><span className="component-chip pink">factory-reviewer</span></th><td>Contents / Actions: read; Issues / PRs / statuses: read/write</td><td>Checks out the exact PR head, runs repository tests, and submits a native review.</td><td>Cannot push code.</td></tr>
+            <tr><th><span className="component-chip blue">watchdog</span></th><td>Reuses the developer token</td><td>Deterministic checks: merges only when acceptance status and Actions are green.</td><td>Does not start any Agent.</td></tr>
+          </tbody></table>
+        </div>
+        <div className="automation-layout"><CodeBlock title="Factory setup order (UI walkthrough)" language="text" code={`1. Settings → LLM: configure the model (provider key / OpenHands key / ACP sign-in / local endpoint)
+2. Settings → Secrets: save the three tokens
+   FACTORY_GITHUB_TRIAGE_TOKEN / DEVELOPER_TOKEN / REVIEWER_TOKEN
+3. Settings → Agent: create three Agent Profiles, each with only its own secret,
+   and disable MCP servers, model switching, and sub-Agents
+4. Automate → Templates: install four templates in order; Check frequency */5 * * * *
+   Triage → Issue to PR (trigger label ready-for-dev; branch prefix factory/issue)
+   → Code Review (label openhands-review) → Delivery Watchdog
+5. Enable only after all are created; walk through the full flow with one small Issue first`} /><div className="automation-notes"><h3>Answer these before integration</h3><ol><li><span>1</span><p><strong>Is the trigger trustworthy?</strong> Issue text in a public repository is untrusted input; triage is the first gate where a human can intervene.</p></li><li><span>2</span><p><strong>Are credentials isolated?</strong> Three stages use three tokens; prompt injection against any one Agent cannot complete a merge by itself.</p></li><li><span>3</span><p><strong>Who defines merge conditions?</strong> The watchdog is a deterministic checker, not a model judgment; GitHub branch protection adds another layer.</p></li><li><span>4</span><p><strong>Is the version recent enough?</strong> This walkthrough requires Agent Canvas ≥ 1.24.0 and per-session Docker containers.</p></li></ol></div></div>
       </section>
 
       <section className="tinted-section">

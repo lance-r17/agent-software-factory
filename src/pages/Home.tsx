@@ -47,7 +47,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
     <section className="home-hero page-width">
       <div className="hero-copy">
         <span className="hand-label">DAILY OPEN-SOURCE FIELD NOTES · 2026</span>
-        <h1>{isEnglish ? <>Make “factories that<br />write software with Agents”<br /><span className="circled">reproducible.</span></> : <>把“用 Agent 写软件的<br />工厂”拆成<br /><span className="circled">可复现的图纸</span></>}</h1>
+        <h1>{isEnglish ? <>Make “factories that<br />write software with Agents”<br /><span className="circled">reproducible.</span></> : <>把“用 Agent<br />写软件的工厂”<span className="whitespace-nowrap">拆成</span><br /><span className="circled">可复现的图纸</span></>}</h1>
         <p>{isEnglish ? 'Every day, we select one open-source solution and use official sources to map its architecture, runtime workflow, local deployment, and security boundaries. Less feature-listing, more evidence you can run.' : '每天只选一个开源方案，从官方资料拆解它的架构、运行链路、本地部署与安全边界。少一点功能罗列，多一点真正跑得通的证据。'}</p>
         <div className="hero-actions">
           <Link className="primary-link" to={{ pathname: homePath, hash: '#library' }}>{isEnglish ? 'Browse the library' : '浏览方案库'} <ArrowDown size={18} /></Link>

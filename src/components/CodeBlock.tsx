@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ArrowUpRight, Check, Copy } from 'lucide-react'
+import { useLocale } from '../locale'
 
 export async function copyText(text: string) {
   if (navigator.clipboard && window.isSecureContext) {
@@ -20,6 +21,8 @@ export async function copyText(text: string) {
 export function CodeBlock({ title, code, language = 'bash' }: { title: string; code: string; language?: string }) {
   const [state, setState] = useState<'idle' | 'copied' | 'error'>('idle')
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const locale = useLocale()
+  const isEnglish = locale === 'en'
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
 
   async function handleCopy() {
@@ -35,13 +38,13 @@ export function CodeBlock({ title, code, language = 'bash' }: { title: string; c
 
   return <div className="code-block">
     <div className="code-toolbar"><span>{title}<small>{language}</small></span>
-      <button type="button" onClick={handleCopy} aria-label={`复制${title}`}>
+      <button type="button" onClick={handleCopy} aria-label={isEnglish ? `Copy ${title}` : `复制${title}`}>
         {state === 'copied' ? <Check size={16} /> : <Copy size={16} />}
-        {state === 'copied' ? '已复制' : state === 'error' ? '复制失败' : '复制'}
+        {state === 'copied' ? (isEnglish ? 'Copied' : '已复制') : state === 'error' ? (isEnglish ? 'Copy failed' : '复制失败') : (isEnglish ? 'Copy' : '复制')}
       </button>
     </div>
     <pre tabIndex={0}><code>{code}</code></pre>
-    <span className="sr-only" aria-live="polite">{state === 'copied' ? '命令已复制到剪贴板' : state === 'error' ? '复制失败，请手动选择代码' : ''}</span>
+    <span className="sr-only" aria-live="polite">{state === 'copied' ? (isEnglish ? 'Commands copied to clipboard' : '命令已复制到剪贴板') : state === 'error' ? (isEnglish ? 'Copy failed; select the code manually' : '复制失败，请手动选择代码') : ''}</span>
   </div>
 }
 
@@ -53,8 +56,9 @@ export function SectionHeading({ kicker, title, intro, id }: { kicker: string; t
   </div>
 }
 
-export function SourceStrip({ children, label = '本节依据' }: { children: ReactNode; label?: string }) {
-  return <div className="source-strip"><strong>{label}</strong><div>{children}</div></div>
+export function SourceStrip({ children, label }: { children: ReactNode; label?: string }) {
+  const locale = useLocale()
+  return <div className="source-strip"><strong>{label ?? (locale === 'en' ? 'Sources for this section' : '本节依据')}</strong><div>{children}</div></div>
 }
 
 export function SourceLink({ href, children }: { href: string; children: ReactNode }) {

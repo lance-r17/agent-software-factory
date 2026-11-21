@@ -31,8 +31,8 @@ jobs:
 
       - name: Install site source into repository
         run: |
-          rsync -a --exclude='.git' --exclude='.bootstrap' /tmp/site/ .
-          git rm -rq --ignore-unmatch .bootstrap .github/workflows/bootstrap.yml
+          rsync -a --exclude='.git' --exclude='.bootstrap' --exclude='.github/workflows' /tmp/site/ .
+          git rm -rq --ignore-unmatch .bootstrap
 
       - name: Commit site source (idempotent)
         run: |

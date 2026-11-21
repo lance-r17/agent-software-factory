@@ -47,7 +47,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
     <section className="home-hero page-width">
       <div className="hero-copy">
         <span className="hand-label">DAILY OPEN-SOURCE FIELD NOTES · 2026</span>
-        <h1>{isEnglish ? <>Make “factories that<br />write software with Agents”<br /><span className="circled">reproducible.</span></> : <>把「用 Agent 写软件的<br />工厂」拆成<br /><span className="circled">可复现的图纸</span></>}</h1>
+        <h1>{isEnglish ? <>Make “factories that<br />write software with Agents”<br /><span className="circled">reproducible.</span></> : <>把“用 Agent 写软件的<br />工厂”拆成<br /><span className="circled">可复现的图纸</span></>}</h1>
         <p>{isEnglish ? 'Every day, we select one open-source solution and use official sources to map its architecture, runtime workflow, local deployment, and security boundaries. Less feature-listing, more evidence you can run.' : '每天只选一个开源方案，从官方资料拆解它的架构、运行链路、本地部署与安全边界。少一点功能罗列，多一点真正跑得通的证据。'}</p>
         <div className="hero-actions">
           <Link className="primary-link" to={{ pathname: homePath, hash: '#library' }}>{isEnglish ? 'Browse the library' : '浏览方案库'} <ArrowDown size={18} /></Link>
@@ -85,7 +85,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
 
     <section className="method-section" id="method">
       <div className="method-grid page-width">
-        <div><span className="hand-label">02 · OUR METHOD</span><h2>{isEnglish ? 'One solution a day.<br />Four evidence layers.' : '每天一个方案，<br />四层证据拆解。'}</h2><p>{isEnglish ? 'We evaluate each open-source project as a production candidate, not a promotional page. Official facts and local checks are labeled separately.' : '不把开源项目写成宣传页，而是当成一次生产候选评估。官方事实与本地实测分开标注。'}</p></div>
+        <div><span className="hand-label">02 · OUR METHOD</span><h2>{isEnglish ? 'One solution a day.<br />Four evidence layers.' : <>每天一个方案，<br />四层证据拆解。</>}</h2><p>{isEnglish ? 'We evaluate each open-source project as a production candidate, not a promotional page. Official facts and local checks are labeled separately.' : '不把开源项目写成宣传页，而是当成一次生产候选评估。官方事实与本地实测分开标注。'}</p></div>
         <ol className="method-list">
           <li><span>1</span><div><strong>{isEnglish ? 'Architecture map' : '架构地图'}</strong><p>{isEnglish ? 'Core components, data flow, model and tool boundaries, and extension interfaces.' : '核心组件、数据流、模型与工具边界、扩展接口。'}</p></div></li>
           <li><span>2</span><div><strong>{isEnglish ? 'Reproduction manual' : '复现手册'}</strong><p>{isEnglish ? 'Dependencies, exact commands, configuration templates, directory layout, and verification.' : '依赖版本、精确命令、配置模板、目录结构与验证结果。'}</p></div></li>

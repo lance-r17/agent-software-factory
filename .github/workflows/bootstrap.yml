@@ -23,7 +23,7 @@ jobs:
 
       - name: Assemble and verify source tarball
         run: |
-          cat .bootstrap/chunk-* > /tmp/site.b64
+          cat .bootstrap/chunk-complete > /tmp/site.b64
           base64 -d /tmp/site.b64 > /tmp/site.tar.gz
           tar -tzf /tmp/site.tar.gz > /dev/null
           mkdir -p /tmp/site

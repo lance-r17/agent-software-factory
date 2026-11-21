@@ -1,31 +1,37 @@
 # Agent 软件工厂 · 开源方案调研室
 
-每天调研并收录一个「Agent 软件工厂」开源方案（用 Agent 系统自动化软件开发的工具），产出带架构图、部署手册与核验记录的完整分析页。
+每天调研并收录一个「Agent 软件工厂」开源方案（用 Agent 系统自动化软件开发的工具），产出带架构图、部署手册与核验记录的完整分析页。每个新方案必须同时交付中文与英文版本。
 
 - **公开站点（GitHub Pages）**：https://lance-r17.github.io/agent-software-factory/
 - **技术栈**：React + TypeScript + Vite + Tailwind，HashRouter 静态站，`npm ci && npm run build` 产出 `dist/`。
+- **语言路由**：中文保持 `/` 与 `/solutions/<slug>`；英文使用 `/en` 与 `/en/solutions/<slug>`。公开 Hash URL 分别为 `#/`、`#/solutions/<slug>`、`#/en`、`#/en/solutions/<slug>`。
+- **语言切换**：头部 EN / ZH 按钮保留当前方案与页内锚点；导航、正文、图示、Tabs、部署手册、模态框、复制和下载反馈均按当前语言显示。
 
 ## 收录流水线
 
 ```
-候选池选题 → 创建选题 issue（DoD 合同）→ 官方一手资料调研 + 本地核验
-→ 页面 + SKILL.md 部署手册 → 生产构建 + 桌面/移动浏览器验收
+check_site.py + 防重检查 → 安全检查并同步最新 GitHub main
+→ 候选池选题 → 创建选题 issue（中英文 DoD 合同）→ 官方一手资料调研 + 本地核验
+→ 中文页面 / 手册 + 英文页面 / 手册 → 生产构建 + 中英文桌面/移动浏览器验收
 → 保存网站版本（预览）→ solution 分支 + PR（Closes #issue）
 → 人工审阅 merge → main → Actions 构建并发布到 GitHub Pages
 ```
 
+- **开工先同步**：检查现有网站和工作区，执行 `git fetch origin main`，必要时切回本地 `main`，只执行 `git pull --ff-only origin main`。脏工作区或分叉必须停止，不 reset、不 rebase、不覆盖已有网站。
 - **选题即 issue**：每个新选题先开 issue，写清候选信息与验收标准；调研失败保留 issue 并评论留痕。
-- **PR 即终审**：每次收录对应一条 `solution/<slug>-<date>` 分支的 PR，正文含路由、核验日期、核验等级、实测范围与来源。PR 只创建、不自动合并，merge 后 issue 随 `Closes` 自动关闭。
+- **双语即 DoD**：新方案必须同时提供中文路由 `/solutions/<slug>`、英文路由 `/en/solutions/<slug>`、两种语言的完整正文与 SKILL.md 部署手册。英文页面可见文本和可访问性标签不得残留中文。
+- **双语验收**：两种语言都检查路由、语言切换、Tabs（含移动端 dropdown）、手册模态框、复制、下载和移动端无横向溢出；英文下载文件必须是英文 Markdown。
+- **PR 即终审**：每次收录对应一条 `solution/<slug>-<date>` 分支的 PR，正文含中英文路由、核验日期、核验等级、实测范围与来源。PR 只创建、不自动合并，merge 后 issue 随 `Closes` 自动关闭。
 - **发布即 Actions**：merge 到 main 触发 `.github/workflows/pages.yml`，从源码构建并部署 Pages。公开站只包含审阅通过的内容。
-- **历史方案**：OpenHands Agent Canvas v1.43.0、mini-SWE-agent v2.4.6、SWE-agent v1.1.0 为建仓前已收录方案，不补建 issue/PR。
+- **历史方案**：OpenHands Agent Canvas v1.43.0、mini-SWE-agent v2.4.6、SWE-agent v1.1.0 为建仓前已收录方案，不补建方案 issue/PR；全站双语功能由独立 feature 分支和 PR 交付。
 
 ## 已收录方案
 
-| 方案 | 版本 | 路由 | 核验日期 |
-| --- | --- | --- | --- |
-| OpenHands Agent Canvas | v1.43.0 | `#/solutions/openhands-agent-canvas` | 2026-11-20 |
-| mini-SWE-agent | v2.4.6 | `#/solutions/mini-swe-agent` | 2026-11-21 |
-| SWE-agent（遗产版） | v1.1.0 | `#/solutions/swe-agent` | 2026-11-21 |
+| 方案 | 版本 | 中文路由 | 英文路由 | 核验日期 |
+| --- | --- | --- | --- | --- |
+| OpenHands Agent Canvas | v1.43.0 | `#/solutions/openhands-agent-canvas` | `#/en/solutions/openhands-agent-canvas` | 2026-11-20 |
+| mini-SWE-agent | v2.4.6 | `#/solutions/mini-swe-agent` | `#/en/solutions/mini-swe-agent` | 2026-11-21 |
+| SWE-agent（遗产版） | v1.1.0 | `#/solutions/swe-agent` | `#/en/solutions/swe-agent` | 2026-11-21 |
 
 ## 安全红线
 

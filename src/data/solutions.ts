@@ -1,55 +1,55 @@
 export type Solution = {
   slug: string
-  name: string
-  chineseName: string
+  title: string
+  subtitle: string
+  description: string
   version: string
-  date: string
-  summary: string
+  license: string
+  stars: string
+  verifiedAt: string
   tags: string[]
-  paradigm: '单 Agent' | '多 Agent'
-  status: string
-  accent: 'pink' | 'green' | 'blue' | 'yellow'
-  route: string
+  category: '仓库自治' | '编程 Agent'
+  tone: 'pink' | 'green' | 'blue' | 'yellow'
 }
 
 export const solutions: Solution[] = [
   {
-    slug: 'mini-swe-agent',
-    name: 'mini-SWE-agent',
-    chineseName: '百行级软件工程 Agent 内核',
-    version: 'v2.4.6',
-    date: '2026-11-21',
-    summary: '用线性消息历史、bash 工具调用和可替换执行环境，搭出一个能读代码、改代码、跑测试并留下完整轨迹的最小软件工厂内核。',
-    tags: ['MIT', 'Python ≥ 3.10', '本地 / Docker', '可审计轨迹'],
-    paradigm: '单 Agent',
-    status: '官方推荐替代旧版 SWE-agent',
-    accent: 'green',
-    route: '/solutions/mini-swe-agent',
+    slug: 'swe-agent', title: 'SWE-agent', subtitle: 'SWE-bench 时代的高影响力 Agent 框架，现由 mini 接棒',
+    description: 'Python ≥ 3.11 的 MIT 研究框架，完整呈现 ACI、工具束、轨迹与批量实验。官方已进入维护模式并推荐 mini-SWE-agent；本页固定 v1.1.0，保留源码复现、Docker / Modal 路线与历史迁移边界。',
+    version: 'v1.1.0', license: 'MIT', stars: '遗产研究', verifiedAt: '2026-11-21',
+    tags: ['Python ≥ 3.11', 'SWE-ReX', 'ACI', '研究 / 批处理'], category: '编程 Agent', tone: 'yellow',
   },
   {
-    slug: 'openhands-agent-canvas',
-    name: 'OpenHands Agent Canvas',
-    chineseName: '自托管编码 Agent 控制中心',
-    version: 'v1.43.0',
-    date: '2026-11-21',
-    summary: 'Canvas 控制面 + Agent Server + Automation Server 的自托管栈，官方内建分诊、开发、评审、看门狗四段软件工厂流水线，可混用 ACP 兼容 Agent。',
-    tags: ['MIT', 'Node ≥ 24', 'Docker / VM', 'ACP 多 Agent'],
-    paradigm: '多 Agent',
-    status: '2026-11-21 重新核验，取代历史快照',
-    accent: 'pink',
-    route: '/solutions/openhands-agent-canvas',
+    slug: 'mini-swe-agent', title: 'mini-SWE-agent', subtitle: '用约 100 行核心逻辑，跑通模型到补丁的最小闭环',
+    description: 'SWE-agent 团队当前的轻量主线。线性 messages、可替换 Model / Environment、完整 trajectory 与成本限制；适合作为外层软件工厂的单任务执行内核，而不是直接替代 CI、人审与权限系统。',
+    version: 'v2.4.6', license: 'MIT', stars: '官方主线', verifiedAt: '2026-11-21',
+    tags: ['Python ≥ 3.10', 'bash-only', 'Docker 可选', '可序列化轨迹'], category: '编程 Agent', tone: 'green',
   },
   {
-    slug: 'swe-agent',
-    name: 'SWE-agent',
-    chineseName: '完整 ACI 框架遗产版',
-    version: 'v1.1.0',
-    date: '2026-11-21',
-    summary: 'YAML 驱动的研究型软件工程 Agent：Agent + ACI 工具束 + SWE-ReX 执行后端，保留 run-batch、轨迹检视与 SWE-bench 实验链路，但官方已由 mini-SWE-agent 取代。',
-    tags: ['MIT', 'Python ≥ 3.11', 'Docker / Modal', 'SWE-bench'],
-    paradigm: '单 Agent',
-    status: '官方维护模式；用于历史兼容与研究对照',
-    accent: 'blue',
-    route: '/solutions/swe-agent',
+    slug: 'openhands-agent-canvas', title: 'OpenHands Agent Canvas', subtitle: '把多步骤研发流程，画成一张可检查的动态白板',
+    description: 'OpenHands v1 的全新本地界面：Conversation 是实时会话流，Plan 是带进度和子任务的动态计划。适合希望观察、暂停并接管编码 Agent 的团队，也适合作为软件工厂的人机协作前端。',
+    version: 'v1.43.0', license: 'MIT', stars: '28.9k', verifiedAt: '2026-11-20',
+    tags: ['Electron + React', 'FastAPI', '多会话', '人工接管'], category: '编程 Agent', tone: 'pink',
+  },
+]
+
+export const solutionsEn: Solution[] = [
+  {
+    slug: 'swe-agent', title: 'SWE-agent', subtitle: 'The influential SWE-bench-era agent framework, now succeeded by mini',
+    description: 'An MIT-licensed research framework requiring Python 3.11 or later, with a complete ACI, tool bundles, trajectories, and batch experiments. The official project is in maintenance mode and recommends mini-SWE-agent. This analysis pins v1.1.0 and preserves source reproduction, Docker / Modal routes, and migration boundaries.',
+    version: 'v1.1.0', license: 'MIT', stars: 'Legacy research', verifiedAt: '2026-11-21',
+    tags: ['Python ≥ 3.11', 'SWE-ReX', 'ACI', 'Research / batches'], category: '编程 Agent', tone: 'yellow',
+  },
+  {
+    slug: 'mini-swe-agent', title: 'mini-SWE-agent', subtitle: 'A minimal model-to-patch loop with roughly 100 lines of core logic',
+    description: 'The lightweight, current mainline from the SWE-agent team. Linear messages, replaceable Model / Environment protocols, complete trajectories, and cost limits make it a strong single-task execution kernel inside a larger software factory—not a replacement for CI, human review, or access control.',
+    version: 'v2.4.6', license: 'MIT', stars: 'Official mainline', verifiedAt: '2026-11-21',
+    tags: ['Python ≥ 3.10', 'bash-only', 'Optional Docker', 'Serializable traces'], category: '编程 Agent', tone: 'green',
+  },
+  {
+    slug: 'openhands-agent-canvas', title: 'OpenHands Agent Canvas', subtitle: 'A live whiteboard for inspecting multi-step development work',
+    description: 'A new local interface for OpenHands v1: Conversation is the live session stream, while Plan is a dynamic plan with progress and subtasks. It suits teams that want to observe, pause, and take over coding agents, and can serve as the human-agent collaboration front end of a software factory.',
+    version: 'v1.43.0', license: 'MIT', stars: '28.9k', verifiedAt: '2026-11-20',
+    tags: ['Electron + React', 'FastAPI', 'Multiple sessions', 'Human takeover'], category: '编程 Agent', tone: 'pink',
   },
 ]

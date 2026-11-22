@@ -6,7 +6,19 @@
 
 不得重新初始化网站。复用现有 PageShell、SectionHeading、CodeBlock、RouteTabs、DeploySkillCard、图示 CSS 和 lucide-react 图标；不增加 emoji 图标、无目标按钮或占位链接。
 
-## 2. 每个方案的页面内容
+## 2. 双语共享布局与类型化内容
+
+新方案默认使用“一个共享布局 + zh/en 类型化内容”，不要复制完整 `*En.tsx` 页面或图示。
+
+- 页面组件接收 `locale`，App 的中文和英文路由使用同一组件并分别传 `zh` / `en`。
+- 文案、表格、Tabs、故障、风险、来源和代码注释放入 `src/data/solutionContent/<slug>`；布局保留 section 顺序、className 和交互。
+- 用明确接口或递归 `ContentShape<typeof zh>` 约束英文对象，字段缺失必须在 TypeScript 构建时失败。
+- 图示共用 SVG/lucide 结构，语言标签来自内容对象或图示内的双语 copy；不要新增完整 En 图示副本。
+- 简单文本使用字符串和结构化数组。确需富文本时使用类型化 TSX/ReactNode；不要把不可信 HTML 字符串注入页面。
+- 中文和英文可以保留必要的措辞差异，但不应复制排版。只有确实存在语言专属结构时才使用显式、可审查的配置，避免散布大量 locale 条件分支。
+- 重构既有页面时，首个 PR 不顺手润色文案或改 CSS；先证明正文、DOM 和视觉不变。内容改进另开变更。
+
+## 3. 每个方案的页面内容
 
 中文和英文页面都应根据方案实际内容完整覆盖：
 
@@ -20,7 +32,7 @@
 
 同步更新首页中英文卡片、最新方案链接、页面标题和更新记录。保留所有既有页面和导航。
 
-## 3. 独立部署 Skill 目录
+## 4. 独立部署 Skill 目录
 
 部署手册按语言和 Skill frontmatter 的 `name` 建目录：
 
@@ -33,7 +45,7 @@ skills/deploy/en/<skill-name>/SKILL.md
 
 手册应保持可独立执行：frontmatter、适用场景、前置检查、路线选择、精确命令、密钥边界、验收、故障和安全红线。只有确有需要时才添加 `scripts/` 或 `references/`，并使用相对路径。
 
-## 4. 网页注册表
+## 5. 网页注册表
 
 `src/data/deploySkills.ts` 和 `src/data/deploySkillsEn.ts` 只保留：
 
@@ -54,7 +66,7 @@ content: miniSweAgentDeployMarkdown
 
 新增每日方案时，把中文和英文手册分别新增到对应语言目录，再在两个注册表添加元数据和导入。不要把 Markdown 正文重新嵌回 TypeScript 模板字符串。
 
-## 5. 双语与交互检查
+## 6. 双语与交互检查
 
 - 英文正文、代码注释、下载 Markdown 和 aria/title/alt 不得含中文。
 - 语言切换保留当前 solution 与页内锚点。

@@ -64,7 +64,7 @@ python3 scripts/select_candidate.py \
 
 ### 4. 生成双语页面与部署 Skills
 
-读取 `references/page-authoring.md`。从最新 main 创建宿主要求的方案分支，保留既有路由和视觉系统。新增正文、图示和部署手册时，同时注册中文与英文路由。
+读取 `references/page-authoring.md`。从最新 main 创建宿主要求的方案分支，保留既有路由和视觉系统。使用一个共享布局组件和类型化 zh/en 内容，不复制完整 `*En` 页面或图示；新增正文、图示和部署手册时，同时注册中文与英文路由。
 
 部署手册正文存放为独立 `SKILL.md`，网页注册表只保留卡片元数据与 `?raw` 静态导入。新增 Skill 的 `name` 必须与所在目录同名。
 

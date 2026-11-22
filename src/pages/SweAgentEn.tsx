@@ -5,7 +5,7 @@ import { CodeBlock, SectionHeading, SourceLink, SourceStrip, copyText } from '..
 import { DeploySkillCard } from '../components/DeploySkill'
 import { PageShell } from '../components/Layout'
 import { RouteTabs } from '../components/RouteTabs'
-import { SweArchitectureDiagram, SweBatchPipelineDiagram, SweDataEventDiagram, SweDeploymentDiagram, SweWorkflowDiagram } from '../components/SweAgentDiagramsEn'
+import { SweArchitectureDiagram, SweDataEventDiagram, SweDeploymentDiagram, SweWorkflowDiagram } from '../components/SweAgentDiagramsEn'
 import { sweAgentDeploySkillEn } from '../data/deploySkillsEn'
 
 const VERIFY_DATE = '2026-11-21'
@@ -309,7 +309,15 @@ export default function SweAgentEn() {
 
       <section className="page-width detail-section" id="automation">
         <SectionHeading kicker="08 · AUTOMATION GATE" title="SWE-agent executes; the outer system owns the gates" intro="Even the complete framework lacks the approval and permission system a modern factory needs. Let an outer scheduler fetch Issues, prefetch repositories, invoke the CLI, and hand trajectories plus patches to CI and human review." />
-        <SweBatchPipelineDiagram />
+        <div className="component-table-wrap">
+          <table className="component-table"><caption className="sr-only">Stage boundaries for SWE-agent batch processing and outer delivery</caption><thead><tr><th>Stage</th><th>Inputs and controls</th><th>Output or responsibility</th><th>Explicit boundary</th></tr></thead><tbody>
+            <tr><th><span className="component-chip yellow">instances</span></th><td>swe_bench / file / huggingface / expert_file</td><td>Provides traceable instances for batch experiments.</td><td>The instance source proves neither patch correctness nor repository write permission.</td></tr>
+            <tr><th><span className="component-chip green">run-batch</span></th><td>num_workers, isolated workspaces, and exit statuses</td><td>Runs instances concurrently and records failures.</td><td>Worker completion does not mean every instance succeeded.</td></tr>
+            <tr><th><span className="component-chip blue">merge-preds</span></th><td>Per-instance predictions and exit statuses</td><td>Aggregates or repairs preds.json.</td><td>Only merges prediction files; it does not perform final evaluation or delivery.</td></tr>
+            <tr><th><span className="component-chip pink">human-review</span></th><td>inspect / inspector / quick-stats</td><td>Reviews trajectories, cost, patches, and failed instances.</td><td>Agent self-evaluation cannot replace human review.</td></tr>
+            <tr><th><span className="component-chip blue">external-eval</span></th><td>SWE-bench harness or project CI</td><td>Validates the patch independently outside the Agent.</td><td>The Agent does not own final evaluation, push, or merge permission.</td></tr>
+          </tbody></table>
+        </div>
         <div className="automation-layout"><CodeBlock title="03 · Example outer pipeline from Issue to patch" code={AUTOMATION_CODE} /><div className="automation-notes"><h3>Answer these before integration</h3><ol><li><span>1</span><p><strong>Who can trigger?</strong> Issue text is untrusted input; public repositories require maintainer approval before a run.</p></li><li><span>2</span><p><strong>How does the repository enter?</strong> Upload a local repo from the host rather than placing a long-lived GITHUB_TOKEN in a clone URL inside the container.</p></li><li><span>3</span><p><strong>What counts as success?</strong> <code>exit_status == "submitted"</code> + a submission + clean-environment CI + human review.</p></li><li><span>4</span><p><strong>Why not use it as a new base?</strong> The official mainline is in maintenance mode; new automation should prefer mini or an actively evolving platform.</p></li></ol></div></div>
         <div className="config-warning"><AlertTriangle /><p><strong>Private-repository red line:</strong> <code>GithubRepoConfig</code> can interpolate <code>GITHUB_TOKEN</code> into the git remote URL executed inside the container. For private or untrusted repositories, prefetch on the host and configure <code>env.repo.type=local</code>.</p></div>
       </section>

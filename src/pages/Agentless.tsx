@@ -5,7 +5,7 @@ import { CodeBlock, SectionHeading, SourceLink, SourceStrip, copyText } from '..
 import { DeploySkillCard } from '../components/DeploySkill'
 import { PageShell } from '../components/Layout'
 import { RouteTabs } from '../components/RouteTabs'
-import { AgentlessArchitectureDiagram, AgentlessDataEventDiagram, AgentlessDeploymentDiagram, AgentlessSelectionDiagram, AgentlessWorkflowDiagram } from '../components/AgentlessDiagrams'
+import { AgentlessArchitectureDiagram, AgentlessDataEventDiagram, AgentlessDeploymentDiagram, AgentlessWorkflowDiagram } from '../components/AgentlessDiagrams'
 import { agentlessDeploySkill } from '../data/deploySkills'
 
 const VERIFY_DATE = '2026-11-22'
@@ -310,7 +310,15 @@ export default function Agentless() {
 
       <section className="page-width detail-section" id="automation">
         <SectionHeading kicker="08 · AUTOMATION GATE" title="自动化接入：先做实例适配层，再让流水线运行" intro="Agentless 原生读取 SWE-bench 数据集字段，而不是订阅 GitHub Issue。外层工厂必须把已批准的 Issue 映射成 instance_id、repo、base_commit 与 problem_statement，并准备可丢弃 workspace。" />
-        <AgentlessSelectionDiagram />
+        <div className="component-table-wrap">
+          <table className="component-table"><caption className="sr-only">Agentless 补丁验证与选择各阶段的职责边界</caption><thead><tr><th>阶段</th><th>输入与控制</th><th>产出或职责</th><th>明确边界</th></tr></thead><tbody>
+            <tr><th><span className="component-chip yellow">candidates</span></th><td>多组定位 × 每个位置多样本</td><td>生成可解析的候选补丁集合。</td><td>候选数量不代表质量，也不是最终交付。</td></tr>
+            <tr><th><span className="component-chip blue">normalize</span></th><td>normalize_patch 与等价补丁规则</td><td>归一化并合并重复候选。</td><td>去重只减少重复，不证明业务语义正确。</td></tr>
+            <tr><th><span className="component-chip green">regression</span></th><td>回归测试结果与失败数量</td><td>优先保留回归失败更少的候选。</td><td>回归过滤不能替代完整项目 CI。</td></tr>
+            <tr><th><span className="component-chip pink">reproduction</span></th><td>选定复现测试与通过结果</td><td>优先保留通过复现测试的候选。</td><td>没有双通过候选时会退回仅看回归结果。</td></tr>
+            <tr><th><span className="component-chip blue">majority-vote</span></th><td>候选票数、生成顺序与补丁长度</td><td>按票数选择，平票取更早且更短补丁。</td><td>rerank.py 只做选择；外部 CI 与人工审阅决定交付。</td></tr>
+          </tbody></table>
+        </div>
         <div className="automation-layout"><CodeBlock title="03 · 外层调度器的最小门禁示例" code={AUTOMATION_CODE} /><div className="automation-notes"><h3>接入前必须回答</h3><ol><li><span>1</span><p><strong>输入怎么映射？</strong>任意 GitHub Issue 需要转换为 SWE-bench 式实例；不能只把 Issue URL 塞给脚本。</p></li><li><span>2</span><p><strong>仓库放哪里？</strong>官方脚本会基于 repo 与 base_commit 在 playground/ 中处理结构；生产环境要显式隔离该目录。</p></li><li><span>3</span><p><strong>什么叫成功？</strong>all_preds.jsonl 只是候选预测；干净环境测试、代码扫描和人工审阅才算交付闸门。</p></li><li><span>4</span><p><strong>谁能触发？</strong>Issue 文本不可信；公开仓库自动化应先由维护者批准，再进入有预算上限的运行。</p></li></ol></div></div>
         <div className="config-warning"><AlertTriangle /><p><strong>模型密钥边界：</strong>源码中的 deepseek 后端复用 OpenAI-compatible client，未改造时仍默认读取 <code>OPENAI_API_KEY</code>。不要为“看起来正确”而把多个 provider 的长期 key 同时放进运行环境。</p></div>
       </section>

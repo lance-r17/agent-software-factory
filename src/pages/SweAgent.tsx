@@ -5,7 +5,7 @@ import { CodeBlock, SectionHeading, SourceLink, SourceStrip, copyText } from '..
 import { DeploySkillCard } from '../components/DeploySkill'
 import { PageShell } from '../components/Layout'
 import { RouteTabs } from '../components/RouteTabs'
-import { SweArchitectureDiagram, SweBatchPipelineDiagram, SweDataEventDiagram, SweDeploymentDiagram, SweWorkflowDiagram } from '../components/SweAgentDiagrams'
+import { SweArchitectureDiagram, SweDataEventDiagram, SweDeploymentDiagram, SweWorkflowDiagram } from '../components/SweAgentDiagrams'
 import { sweAgentDeploySkill } from '../data/deploySkills'
 
 const VERIFY_DATE = '2026-11-21'
@@ -309,7 +309,15 @@ export default function SweAgent() {
 
       <section className="page-width detail-section" id="automation">
         <SectionHeading kicker="08 · AUTOMATION GATE" title="自动化接入：SWE-agent 负责加工，外层系统负责闸门" intro="完整框架依然没有内建现代工厂所需的审批与权限系统。正确接法是让外层调度器取 Issue、预取仓库、调用 CLI，再把轨迹与补丁交给 CI 和人工审阅。" />
-        <SweBatchPipelineDiagram />
+        <div className="component-table-wrap">
+          <table className="component-table"><caption className="sr-only">SWE-agent 批处理与外层交付各阶段的职责边界</caption><thead><tr><th>阶段</th><th>输入与控制</th><th>产出或职责</th><th>明确边界</th></tr></thead><tbody>
+            <tr><th><span className="component-chip yellow">instances</span></th><td>swe_bench / file / huggingface / expert_file</td><td>提供可追踪的批量实验实例。</td><td>实例来源不证明补丁正确，也不授予仓库写权限。</td></tr>
+            <tr><th><span className="component-chip green">run-batch</span></th><td>num_workers、独立工作区、退出状态</td><td>并发执行实例并记录失败状态。</td><td>worker 完成不等于全部实例成功。</td></tr>
+            <tr><th><span className="component-chip blue">merge-preds</span></th><td>各实例预测与退出状态</td><td>汇总或修复 preds.json。</td><td>只合并预测文件，不执行最终评测或交付。</td></tr>
+            <tr><th><span className="component-chip pink">human-review</span></th><td>inspect / inspector / quick-stats</td><td>检查轨迹、成本、补丁和异常实例。</td><td>人工审查不能由 Agent 自评替代。</td></tr>
+            <tr><th><span className="component-chip blue">external-eval</span></th><td>SWE-bench harness 或项目 CI</td><td>在 Agent 之外独立验证补丁。</td><td>Agent 不掌握最终评测、推送或合并权限。</td></tr>
+          </tbody></table>
+        </div>
         <div className="automation-layout"><CodeBlock title="03 · 接单到补丁的外层流水线示例" code={AUTOMATION_CODE} /><div className="automation-notes"><h3>接入前必须回答</h3><ol><li><span>1</span><p><strong>谁能触发？</strong> Issue 文本是不可信输入；公开仓库先由维护者批准，再进入 run。</p></li><li><span>2</span><p><strong>仓库如何进入？</strong> 用 local repo 从宿主上传，避免长期 GITHUB_TOKEN 随 clone URL 进入容器。</p></li><li><span>3</span><p><strong>什么叫成功？</strong> <code>exit_status == "submitted"</code> + 有 submission + 干净环境 CI + 人工审阅。</p></li><li><span>4</span><p><strong>为什么不用它当新底座？</strong> 官方主线维护模式；新自动化应优先 mini 或仍在演进的平台。</p></li></ol></div></div>
         <div className="config-warning"><AlertTriangle /><p><strong>私有仓库红线：</strong><code>GithubRepoConfig</code> 会把 <code>GITHUB_TOKEN</code> 拼进容器内执行的 git remote URL。处理私有或不可信仓库时，改由宿主预取代码并配置 <code>env.repo.type=local</code>。</p></div>
       </section>

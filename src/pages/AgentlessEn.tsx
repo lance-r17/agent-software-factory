@@ -5,7 +5,7 @@ import { CodeBlock, SectionHeading, SourceLink, SourceStrip, copyText } from '..
 import { DeploySkillCard } from '../components/DeploySkill'
 import { PageShell } from '../components/Layout'
 import { RouteTabs } from '../components/RouteTabs'
-import { AgentlessArchitectureDiagramEn, AgentlessDataEventDiagramEn, AgentlessDeploymentDiagramEn, AgentlessSelectionDiagramEn, AgentlessWorkflowDiagramEn } from '../components/AgentlessDiagramsEn'
+import { AgentlessArchitectureDiagramEn, AgentlessDataEventDiagramEn, AgentlessDeploymentDiagramEn, AgentlessWorkflowDiagramEn } from '../components/AgentlessDiagramsEn'
 import { agentlessDeploySkillEn } from '../data/deploySkillsEn'
 
 const VERIFY_DATE = '2026-11-22'
@@ -312,7 +312,15 @@ export default function AgentlessEn() {
 
       <section className="page-width detail-section" id="automation">
         <SectionHeading kicker="08 · AUTOMATION GATE" title="Automation: build an instance adapter before running the pipeline" intro="Agentless natively reads SWE-bench dataset fields; it does not subscribe to GitHub Issues. An outer factory must map an approved Issue to instance_id, repo, base_commit, and problem_statement, then prepare a disposable workspace." />
-        <AgentlessSelectionDiagramEn />
+        <div className="component-table-wrap">
+          <table className="component-table"><caption className="sr-only">Stage boundaries for Agentless patch validation and selection</caption><thead><tr><th>Stage</th><th>Inputs and controls</th><th>Output or responsibility</th><th>Explicit boundary</th></tr></thead><tbody>
+            <tr><th><span className="component-chip yellow">candidates</span></th><td>Multiple location sets × samples per location</td><td>Generates a parseable set of candidate patches.</td><td>Candidate volume implies neither quality nor final delivery.</td></tr>
+            <tr><th><span className="component-chip blue">normalize</span></th><td>normalize_patch and equivalent-patch rules</td><td>Normalizes and deduplicates equivalent candidates.</td><td>Deduplication reduces repetition but does not prove business correctness.</td></tr>
+            <tr><th><span className="component-chip green">regression</span></th><td>Regression results and failed-test counts</td><td>Prefers candidates with fewer regression failures.</td><td>Regression filtering does not replace full project CI.</td></tr>
+            <tr><th><span className="component-chip pink">reproduction</span></th><td>The selected reproduction test and its result</td><td>Prefers candidates passing the reproduction test.</td><td>Without a dual-pass candidate, selection falls back to regression-only results.</td></tr>
+            <tr><th><span className="component-chip blue">majority-vote</span></th><td>Vote counts, generation order, and patch length</td><td>Selects by votes; ties prefer earlier and shorter patches.</td><td>rerank.py only selects; external CI and human review decide delivery.</td></tr>
+          </tbody></table>
+        </div>
         <div className="automation-layout"><CodeBlock title="03 · Minimal outer-scheduler gate example" code={AUTOMATION_CODE} /><div className="automation-notes"><h3>Answer these before integration</h3><ol><li><span>1</span><p><strong>How is input mapped?</strong> An arbitrary GitHub Issue must become a SWE-bench-style instance; an Issue URL alone is not enough.</p></li><li><span>2</span><p><strong>Where does the repository live?</strong> Official scripts process structure from repo and base_commit in playground/; isolate that directory explicitly in production.</p></li><li><span>3</span><p><strong>What counts as success?</strong> all_preds.jsonl is only a candidate prediction; clean-environment tests, code scanning, and human review remain delivery gates.</p></li><li><span>4</span><p><strong>Who can trigger?</strong> Issue text is untrusted; public-repository automation should require maintainer approval before a budget-limited run.</p></li></ol></div></div>
         <div className="config-warning"><AlertTriangle /><p><strong>Model secret boundary:</strong> the DeepSeek backend in the source reuses the OpenAI-compatible client and, unless changed, still reads <code>OPENAI_API_KEY</code>. Do not place several providers’ long-lived keys in one runtime merely to make configuration appear correct.</p></div>
       </section>

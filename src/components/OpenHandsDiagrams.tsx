@@ -1,108 +1,74 @@
+import { Fragment } from 'react'
 import { ArrowDown, ArrowLeft, ArrowRight, Bot, CalendarClock, Check, Container, FileCode2, GitBranch, GitMerge, GitPullRequest, Globe, KeyRound, MonitorSmartphone, RotateCcw, Server, ShieldAlert, Workflow } from 'lucide-react'
+import type { Locale } from '../locale'
 
-export function CanvasArchitectureDiagram() {
-  return <figure className="paper-diagram architecture-diagram">
-    <div className="diagram-topline"><span>图 1 · 服务架构</span><span>Canvas 是控制面，不是执行沙箱</span></div>
-    <div className="arch-grid">
-      <div className="arch-column input-column">
-        <span className="diagram-label">输入 / 触发源</span>
-        <div className="diagram-box yellow"><MonitorSmartphone /><strong>浏览器 UI</strong><small>React Canvas client<br />localhost:8000<br />会话 / 文件 / 设置</small></div>
-        <div className="diagram-box pink"><CalendarClock /><strong>自动化触发</strong><small>cron 调度<br />GitHub / Linear webhook<br />预置模板</small></div>
-      </div>
-      <div className="arch-arrow" aria-hidden="true"><ArrowRight /></div>
-      <div className="arch-core">
-        <span className="diagram-label">agent-canvas 本地栈（单机）</span>
-        <div className="core-loop">
-          <div className="diagram-box blue"><span className="box-index">I</span><strong>Ingress</strong><small>127.0.0.1:8000<br />按路径分发<br />静态 :3001</small></div>
-          <div className="loop-arrows" aria-hidden="true"><span>/api/* /sockets <ArrowRight size={10} /></span><span><ArrowLeft size={10} /> 事件流</span></div>
-          <div className="diagram-box green"><span className="box-index">S</span><strong>Agent Server</strong><small>:18000 · 会话 / 工具<br />profiles / secrets<br />REST + WebSocket</small></div>
-          <div className="loop-arrows" aria-hidden="true"><span>/api/automation <ArrowRight size={10} /></span><span><ArrowLeft size={10} /> 运行历史</span></div>
-          <div className="diagram-box yellow"><span className="box-index">A</span><strong>Automation</strong><small>:18001 · 调度器<br />webhook 事件源<br />dispatch 会话</small></div>
-        </div>
-      </div>
-      <div className="arch-arrow" aria-hidden="true"><ArrowRight /></div>
-      <div className="arch-column output-column">
-        <span className="diagram-label">执行边界 / 交付</span>
-        <div className="diagram-box green"><Container /><strong>Workspace / 沙箱</strong><small>宿主目录或<br />每会话 Docker 容器<br />Cloud / VM 后端</small></div>
-        <div className="diagram-box blue"><GitPullRequest /><strong>工程交付</strong><small>分支 + commit<br />PR / review / merge<br />Issue 回评</small></div>
-      </div>
-    </div>
-    <div className="diagram-boundary"><ShieldAlert size={18} /><strong>边界外：</strong>Canvas 只做呈现与请求转发；真正接触文件系统、网络和密钥的是 Agent Server 与其选中的执行环境。</div>
-    <figcaption>官方仓库边界：OpenHands/OpenHands 是前端与本地编排；Agent、工具、会话与事件在 OpenHands/software-agent-sdk；调度在 OpenHands/automation。</figcaption>
-  </figure>
+const copy = {
+  zh: {
+    architecture: {
+      topLeft: '图 1 · 服务架构', topRight: 'Canvas 是控制面，不是执行沙箱', inputLabel: '输入 / 触发源', browserTitle: '浏览器 UI', browserLines: ['React Canvas client', 'localhost:8000', '会话 / 文件 / 设置'], automationTitle: '自动化触发', automationLines: ['cron 调度', 'GitHub / Linear webhook', '预置模板'], coreLabel: 'agent-canvas 本地栈（单机）', ingressLines: ['127.0.0.1:8000', '按路径分发', '静态 :3001'], agentLines: [':18000 · 会话 / 工具', 'profiles / secrets', 'REST + WebSocket'], automationCoreLines: [':18001 · 调度器', 'webhook 事件源', 'dispatch 会话'], loopBack1: '事件流', loopBack2: '运行历史', outputLabel: '执行边界 / 交付', workspaceTitle: 'Workspace / 沙箱', workspaceLines: ['宿主目录或', '每会话 Docker 容器', 'Cloud / VM 后端'], deliveryTitle: '工程交付', deliveryLines: ['分支 + commit', 'PR / review / merge', 'Issue 回评'], boundaryLead: '边界外：', boundaryBody: 'Canvas 只做呈现与请求转发；真正接触文件系统、网络和密钥的是 Agent Server 与其选中的执行环境。', caption: '官方仓库边界：OpenHands/OpenHands 是前端与本地编排；Agent、工具、会话与事件在 OpenHands/software-agent-sdk；调度在 OpenHands/automation。',
+    },
+    workflow: {
+      topLeft: '图 2 · 会话事件循环', topRight: '事件流是唯一的对话事实来源', steps: [['创建或恢复会话', '人工对话、cron 或 webhook 触发；Automation Server 把任务 dispatch 给 Agent Server。'], ['组装上下文', '装入技能、AGENTS.md、MCP 工具与 Agent Profile 允许的 secrets。'], ['模型决策', '经 LiteLLM 调用配置的模型，或由 ACP 委托给 Claude Code / Codex 等外部 Agent。'], ['执行动作', 'bash、文件编辑、浏览器等工具在工作区或容器内运行。'], ['观察回流', 'Action / Observation 经 pydantic 校验后写入事件流，实时推回浏览器。'], ['交付与验收', 'FinishAction 结束循环；PR、评审状态与合并由人或 watchdog 决定。']], loopLabel: '未收到 FinishAction 且未触及限制', loopText: '返回 03，继续下一轮', caption: '事件流按时间顺序记录动作与观察；成本、token 与多 Agent 委托元数据也在会话状态中累计。',
+    },
+    state: {
+      topLeft: '图 3 · 状态归属', topRight: '升级与备份都围绕状态目录设计', events: [['Agent Server', '会话与配置', '对话历史、Agent / LLM profiles、secrets、MCP 配置。'], ['Automation', '自动化资产', '自动化定义、调度、webhook 事件源与运行历史。'], ['Workspace', '代码与产物', 'Agent 读写的一切文件；容器化时经 bind mount 持久。'], ['Canvas', '连接信息', '只保存各后端的地址与凭据引用，不持有对话本体。'], ['~/.openhands', '本地状态目录', 'npm / npx 安装的设置、密钥与会话；Docker 用 openhands-data 卷。'], ['api-key.txt', '会话密钥', 'Docker 自动生成于状态目录；重启复用，泄漏即失守。']], keyTitle: '两类密钥别混淆', sessionGroup: '会话 / 后端密钥', modelGroup: '模型密钥', note: '模型 key 解不开本地后端；会话 key 也不该出现在 Dockerfile、镜像层或截图里。', caption: '切换后端就切换了对话、设置与自动化的归属——排障时先确认当前连的是哪个后端。',
+    },
+    factory: {
+      topLeft: '图 4 · 官方软件工厂流水线', topRight: '四个 automation 各管一段，凭证互相隔离', aria: 'Issue 到合并的四段自动化流水线', steps: [{ tag: 'triage token', title: '分诊', body: '定优先级、查依赖、写验收标准，打 ready-for-dev 标签' }, { tag: 'developer token', title: '开发', body: '按标签开工，factory/issue 前缀分支，提交 PR 待评审' }, { tag: 'reviewer token', title: '评审', body: '检出 PR 精确 head，跑仓库测试，发原生 review；不能 push' }, { tag: '确定性 · 无 Agent', title: '看门狗', body: '只在验收状态与 Actions 全绿时合并当前分支' }], caption: '需要 Agent Canvas ≥ 1.24.0 与每会话 Docker 容器。三个细粒度 GitHub PAT 分别绑定三个 Agent Profile，profile 只允许看到自己的 secret。',
+      roles: [{ title: '谁决定“何时运行”', body: 'Automation Server 持有 cron 与 webhook，只负责调度与 dispatch。watchdog 是确定性检查器，不启动 Agent——这是官方设计里最像“工厂质检门”的角色。' }, { title: '谁决定“运行什么”', body: 'Agent Server 与 SDK 负责会话、工具与事件流。Agent Profile 把模型、secrets、MCP 服务器和子 Agent 开关打包成可复用身份，让每段流水线各拿各的钥匙。' }, { title: '谁在边界之外', body: 'Canvas 浏览器端不接触文件系统；GitHub 合并权限在 watchdog 的确定性逻辑与仓库分支保护里。任何一段都不该同时拥有“写代码”和“合并代码”两种凭证。' }, { title: '官方跑通的证据', body: '官方软件工厂文档记录了对演示仓库的完整走查：六个 Issue 分诊后六个开发会话并发进入 Docker，评审 Agent 逐个验收，watchdog 完成合并。这是官方记录，不是本站复测。' }],
+    },
+    deployment: {
+      topLeft: '图 5 · 部署路线', topRight: '隔离强度递增，可观测性不变', lanes: [{ tag: 'A · 本机体验', title: 'npm 全栈本地跑', flow: ['Node ≥ 24 + uv', 'agent-canvas', 'localhost:8000'], body: '最快但无隔离：官方明确警告 Agent 将以你的账户权限读写文件系统。只用于可信机器上的体验。' }, { tag: 'B · 本机隔离', title: 'Docker 单容器', flow: ['固定 tag 镜像', '挂载 /projects', '127.0.0.1:8000'], body: 'Canvas 与后端都在容器里，状态落在 openhands-data 卷。再加 OH_CONVERSATION_RUNTIME=docker 可让每个会话再进独立加固容器。' }, { tag: 'C · 常驻工厂', title: 'VM + public 模式', flow: ['防火墙只开 22/443', '--public + API key', 'nginx + TLS'], body: 'systemd 保活，nginx 终结 TLS。API key 不注入页面，所有 /api/* 需 X-Session-API-Key。' }], caption: '三条路线共用同一套 UI 与事件流；差别只在执行边界与凭证注入方式。Cloud / Enterprise 是托管版本，不在本页自托管范围内。',
+    },
+  },
+  en: {
+    architecture: {
+      topLeft: 'FIG 1 · SERVICE ARCHITECTURE', topRight: 'Canvas is the control plane, not an execution sandbox', inputLabel: 'INPUT / TRIGGERS', browserTitle: 'Browser UI', browserLines: ['React Canvas client', 'localhost:8000', 'Conversations / files / settings'], automationTitle: 'Automation triggers', automationLines: ['cron schedules', 'GitHub / Linear webhooks', 'Built-in templates'], coreLabel: 'agent-canvas local stack (single host)', ingressLines: ['127.0.0.1:8000', 'Path-based routing', 'Static :3001'], agentLines: [':18000 · conversations / tools', 'profiles / secrets', 'REST + WebSocket'], automationCoreLines: [':18001 · scheduler', 'webhook event sources', 'conversation dispatch'], loopBack1: 'event stream', loopBack2: 'run history', outputLabel: 'EXECUTION BOUNDARY / DELIVERY', workspaceTitle: 'Workspace / sandbox', workspaceLines: ['Host directory or', 'Docker per conversation', 'Cloud / VM backend'], deliveryTitle: 'Engineering delivery', deliveryLines: ['branch + commit', 'PR / review / merge', 'Issue comments'], boundaryLead: 'Outside the boundary:', boundaryBody: ' Canvas only presents state and forwards requests; Agent Server and its selected execution environment are what actually touch the filesystem, network, and secrets.', caption: 'Repository boundaries: OpenHands/OpenHands owns the frontend and local orchestration; Agents, tools, conversations, and events live in OpenHands/software-agent-sdk; scheduling lives in OpenHands/automation.',
+    },
+    workflow: {
+      topLeft: 'FIG 2 · CONVERSATION EVENT LOOP', topRight: 'The event stream is the conversation’s source of truth', steps: [['Create or resume a conversation', 'A manual conversation, cron, or webhook triggers work; Automation Server dispatches the task to Agent Server.'], ['Assemble context', 'Load skills, AGENTS.md, MCP tools, and the secrets allowed by the Agent Profile.'], ['Model decision', 'Call the configured model through LiteLLM or delegate through ACP to an external Agent such as Claude Code / Codex.'], ['Execute actions', 'Tools such as bash, file editing, and browser automation run in the workspace or container.'], ['Return observations', 'Actions / Observations are validated with pydantic, appended to the event stream, and pushed to the browser in real time.'], ['Deliver and accept', 'FinishAction ends the loop; a human or watchdog decides PR, review status, and merge.']], loopLabel: 'No FinishAction and no limit reached', loopText: 'Return to 03 for another iteration', caption: 'The event stream records actions and observations chronologically; cost, tokens, and multi-Agent delegation metadata also accumulate in conversation state.',
+    },
+    state: {
+      topLeft: 'FIG 3 · STATE OWNERSHIP', topRight: 'Upgrades and backups are designed around state directories', events: [['Agent Server', 'Conversations and configuration', 'Conversation history, Agent / LLM profiles, secrets, and MCP configuration.'], ['Automation', 'Automation assets', 'Automation definitions, schedules, webhook event sources, and run history.'], ['Workspace', 'Code and artifacts', 'Every file the Agent reads or writes; persisted through bind mounts when containerized.'], ['Canvas', 'Connection information', 'Stores backend addresses and credential references only, not conversation contents.'], ['~/.openhands', 'Local state directory', 'Settings, secrets, and conversations for npm / npx; Docker uses the openhands-data volume.'], ['api-key.txt', 'Session key', 'Generated by Docker in the state directory, reused across restarts, and fatal if leaked.']], keyTitle: 'Do not confuse the two key types', sessionGroup: 'Session / backend keys', modelGroup: 'Model keys', note: 'A model key cannot unlock the local backend; session keys must never appear in Dockerfiles, image layers, or screenshots.', caption: 'Switching backends switches ownership of conversations, settings, and automations; confirm the active backend before troubleshooting.',
+    },
+    factory: {
+      topLeft: 'FIG 4 · OFFICIAL SOFTWARE-FACTORY PIPELINE', topRight: 'Four automations, each with isolated credentials', aria: 'Four-stage automation pipeline from Issue to merge', steps: [{ tag: 'triage token', title: 'Triage', body: 'Prioritizes, checks dependencies, writes acceptance criteria, and applies ready-for-dev' }, { tag: 'developer token', title: 'Development', body: 'Starts from labels, creates factory/issue branches, and opens PRs for review' }, { tag: 'reviewer token', title: 'Review', body: 'Checks out the exact PR head, runs repository tests, and submits native reviews; cannot push' }, { tag: 'Deterministic · no Agent', title: 'Watchdog', body: 'Merges the current branch only when acceptance status and Actions are green' }], caption: 'Requires Agent Canvas ≥ 1.24.0 and per-conversation Docker containers. Three fine-grained GitHub PATs bind to three Agent Profiles, and each profile can see only its own secret.',
+      roles: [{ title: 'Who decides when to run', body: 'Automation Server owns cron and webhooks and only schedules and dispatches. The watchdog is a deterministic checker that starts no Agent; it is the official design’s factory quality gate.' }, { title: 'Who decides what runs', body: 'Agent Server and the SDK own conversations, tools, and event streams. Agent Profiles package models, secrets, MCP servers, and sub-Agent switches into reusable identities, giving each stage its own keys.' }, { title: 'What stays outside the boundary', body: 'The Canvas browser never touches the filesystem; GitHub merge permission belongs to deterministic watchdog logic and branch protection. No stage should hold both code-write and code-merge credentials.' }, { title: 'Official walkthrough evidence', body: 'The official factory guide records a complete demo-repository walkthrough: six triaged Issues led to six concurrent development conversations in Docker, reviewer Agents accepted them individually, and the watchdog merged them. This is an official record, not a local reproduction.' }],
+    },
+    deployment: {
+      topLeft: 'FIG 5 · DEPLOYMENT ROUTES', topRight: 'Isolation increases while observability stays consistent', lanes: [{ tag: 'A · LOCAL EXPERIENCE', title: 'Local npm full stack', flow: ['Node ≥ 24 + uv', 'agent-canvas', 'localhost:8000'], body: 'Fastest but unsandboxed: the official warning says the Agent reads and writes with your account privileges. Use only on trusted machines.' }, { tag: 'B · LOCAL ISOLATION', title: 'Single Docker container', flow: ['Pinned image tag', 'Mounted /projects', '127.0.0.1:8000'], body: 'Canvas and backends run in the container with state in openhands-data. Adding OH_CONVERSATION_RUNTIME=docker places each conversation in another hardened container.' }, { tag: 'C · PERSISTENT FACTORY', title: 'VM + public mode', flow: ['Firewall allows only 22/443', '--public + API key', 'nginx + TLS'], body: 'systemd keeps the service alive and nginx terminates TLS. The API key is not injected into the page, and every /api/* request needs X-Session-API-Key.' }], caption: 'All three routes share the same UI and event stream; only execution boundaries and credential injection differ. Cloud / Enterprise are managed offerings outside this self-hosted guide.',
+    },
+  },
 }
 
-const eventSteps = [
-  ['01', '创建或恢复会话', '人工对话、cron 或 webhook 触发；Automation Server 把任务 dispatch 给 Agent Server。'],
-  ['02', '组装上下文', '装入技能、AGENTS.md、MCP 工具与 Agent Profile 允许的 secrets。'],
-  ['03', '模型决策', '经 LiteLLM 调用配置的模型，或由 ACP 委托给 Claude Code / Codex 等外部 Agent。'],
-  ['04', '执行动作', 'bash、文件编辑、浏览器等工具在工作区或容器内运行。'],
-  ['05', '观察回流', 'Action / Observation 经 pydantic 校验后写入事件流，实时推回浏览器。'],
-  ['06', '交付与验收', 'FinishAction 结束循环；PR、评审状态与合并由人或 watchdog 决定。'],
-]
+function Lines({ lines }: { lines: string[] }) { return <small>{lines.map((line,index)=><Fragment key={line}>{index>0&&<br />}{line}</Fragment>)}</small> }
 
-export function EventLoopDiagram() {
-  return <figure className="paper-diagram workflow-diagram">
-    <div className="diagram-topline"><span>图 2 · 会话事件循环</span><span>事件流是唯一的对话事实来源</span></div>
-    <ol className="workflow-steps">
-      {eventSteps.map(([number, title, text], index) => <li key={number} className={['yellow', 'blue', 'pink', 'green', 'blue', 'yellow'][index]}>
-        <span className="flow-number">{number}</span><strong>{title}</strong><p>{text}</p>{index < eventSteps.length - 1 && <ArrowDown className="flow-down" aria-hidden="true" />}
-      </li>)}
-    </ol>
-    <div className="loop-back"><RotateCcw className="loop-back-icon" aria-hidden="true" /><span>未收到 FinishAction 且未触及限制</span><strong>返回 03，继续下一轮</strong></div>
-    <figcaption>事件流按时间顺序记录动作与观察；成本、token 与多 Agent 委托元数据也在会话状态中累计。</figcaption>
-  </figure>
+export function CanvasArchitectureDiagram({ locale }: { locale: Locale }) {
+  const c=copy[locale].architecture
+  return <figure className="paper-diagram architecture-diagram"><div className="diagram-topline"><span>{c.topLeft}</span><span>{c.topRight}</span></div><div className="arch-grid"><div className="arch-column input-column"><span className="diagram-label">{c.inputLabel}</span><div className="diagram-box yellow"><MonitorSmartphone /><strong>{c.browserTitle}</strong><Lines lines={c.browserLines} /></div><div className="diagram-box pink"><CalendarClock /><strong>{c.automationTitle}</strong><Lines lines={c.automationLines} /></div></div><div className="arch-arrow" aria-hidden="true"><ArrowRight /></div><div className="arch-core"><span className="diagram-label">{c.coreLabel}</span><div className="core-loop"><div className="diagram-box blue"><span className="box-index">I</span><strong>Ingress</strong><Lines lines={c.ingressLines} /></div><div className="loop-arrows" aria-hidden="true"><span>/api/* /sockets <ArrowRight size={10} /></span><span><ArrowLeft size={10} /> {c.loopBack1}</span></div><div className="diagram-box green"><span className="box-index">S</span><strong>Agent Server</strong><Lines lines={c.agentLines} /></div><div className="loop-arrows" aria-hidden="true"><span>/api/automation <ArrowRight size={10} /></span><span><ArrowLeft size={10} /> {c.loopBack2}</span></div><div className="diagram-box yellow"><span className="box-index">A</span><strong>Automation</strong><Lines lines={c.automationCoreLines} /></div></div></div><div className="arch-arrow" aria-hidden="true"><ArrowRight /></div><div className="arch-column output-column"><span className="diagram-label">{c.outputLabel}</span><div className="diagram-box green"><Container /><strong>{c.workspaceTitle}</strong><Lines lines={c.workspaceLines} /></div><div className="diagram-box blue"><GitPullRequest /><strong>{c.deliveryTitle}</strong><Lines lines={c.deliveryLines} /></div></div></div><div className="diagram-boundary"><ShieldAlert size={18} /><strong>{c.boundaryLead}</strong>{c.boundaryBody}</div><figcaption>{c.caption}</figcaption></figure>
 }
 
-export function StateOwnershipDiagram() {
-  const events = [
-    ['Agent Server', '会话与配置', '对话历史、Agent / LLM profiles、secrets、MCP 配置。'],
-    ['Automation', '自动化资产', '自动化定义、调度、webhook 事件源与运行历史。'],
-    ['Workspace', '代码与产物', 'Agent 读写的一切文件；容器化时经 bind mount 持久。'],
-    ['Canvas', '连接信息', '只保存各后端的地址与凭据引用，不持有对话本体。'],
-    ['~/.openhands', '本地状态目录', 'npm / npx 安装的设置、密钥与会话；Docker 用 openhands-data 卷。'],
-    ['api-key.txt', '会话密钥', 'Docker 自动生成于状态目录；重启复用，泄漏即失守。'],
-  ]
-  return <figure className="paper-diagram data-diagram">
-    <div className="diagram-topline"><span>图 3 · 状态归属</span><span>升级与备份都围绕状态目录设计</span></div>
-    <div className="event-layout">
-      <ol className="event-stream">{events.map(([role, title, text], index) => <li key={`${role}-${index}`} className={index === 5 ? 'exit-event' : ''}><span className="event-role">{role}</span><div><strong>{title}</strong><p>{text}</p></div></li>)}</ol>
-      <div className="trajectory-note"><KeyRound /><strong>两类密钥别混淆</strong><code>会话 / 后端密钥<br />LOCAL_BACKEND_API_KEY<br />api-key.txt<br />—<br />模型密钥<br />Settings → LLM<br />LiteLLM provider key</code><p>模型 key 解不开本地后端；会话 key 也不该出现在 Dockerfile、镜像层或截图里。</p></div>
-    </div>
-    <figcaption>切换后端就切换了对话、设置与自动化的归属——排障时先确认当前连的是哪个后端。</figcaption>
-  </figure>
+export function EventLoopDiagram({ locale }: { locale: Locale }) {
+  const c=copy[locale].workflow
+  return <figure className="paper-diagram workflow-diagram"><div className="diagram-topline"><span>{c.topLeft}</span><span>{c.topRight}</span></div><ol className="workflow-steps">{c.steps.map(([title,text],index)=><li key={title} className={['yellow','blue','pink','green','blue','yellow'][index]}><span className="flow-number">{String(index+1).padStart(2,'0')}</span><strong>{title}</strong><p>{text}</p>{index<c.steps.length-1&&<ArrowDown className="flow-down" aria-hidden="true" />}</li>)}</ol><div className="loop-back"><RotateCcw className="loop-back-icon" aria-hidden="true" /><span>{c.loopLabel}</span><strong>{c.loopText}</strong></div><figcaption>{c.caption}</figcaption></figure>
 }
 
-export function FactoryPipelineDiagram() {
-  return <figure className="paper-diagram factory-diagram">
-    <div className="diagram-topline"><span>图 4 · 官方软件工厂流水线</span><span>四个 automation 各管一段，凭证互相隔离</span></div>
-    <div className="factory-conveyor" aria-label="Issue 到合并的四段自动化流水线">
-      <div className="conveyor-step external"><span>triage token</span><GitBranch /><strong>分诊</strong><p>定优先级、查依赖、写验收标准，打 ready-for-dev 标签</p></div><ArrowRight className="conveyor-arrow" />
-      <div className="conveyor-step internal"><span>developer token</span><Bot /><strong>开发</strong><p>按标签开工，factory/issue 前缀分支，提交 PR 待评审</p></div><ArrowRight className="conveyor-arrow" />
-      <div className="conveyor-step internal"><span>reviewer token</span><FileCode2 /><strong>评审</strong><p>检出 PR 精确 head，跑仓库测试，发原生 review；不能 push</p></div><ArrowRight className="conveyor-arrow" />
-      <div className="conveyor-step external"><span>确定性 · 无 Agent</span><GitMerge /><strong>看门狗</strong><p>只在验收状态与 Actions 全绿时合并当前分支</p></div>
-    </div>
-    <figcaption>需要 Agent Canvas ≥ 1.24.0 与每会话 Docker 容器。三个细粒度 GitHub PAT 分别绑定三个 Agent Profile，profile 只允许看到自己的 secret。</figcaption>
-  </figure>
+export function StateOwnershipDiagram({ locale }: { locale: Locale }) {
+  const c=copy[locale].state
+  return <figure className="paper-diagram data-diagram"><div className="diagram-topline"><span>{c.topLeft}</span><span>{c.topRight}</span></div><div className="event-layout"><ol className="event-stream">{c.events.map(([role,title,text],index)=><li key={`${role}-${index}`} className={index===5?'exit-event':''}><span className="event-role">{role}</span><div><strong>{title}</strong><p>{text}</p></div></li>)}</ol><div className="trajectory-note"><KeyRound /><strong>{c.keyTitle}</strong><code>{c.sessionGroup}<br />LOCAL_BACKEND_API_KEY<br />api-key.txt<br />—<br />{c.modelGroup}<br />Settings → LLM<br />LiteLLM provider key</code><p>{c.note}</p></div></div><figcaption>{c.caption}</figcaption></figure>
 }
 
-export function DeployRoutesDiagram() {
-  return <figure className="paper-diagram deployment-diagram">
-    <div className="diagram-topline"><span>图 5 · 部署路线</span><span>隔离强度递增，可观测性不变</span></div>
-    <div className="deployment-lanes">
-      <div className="deploy-lane yellow"><span className="lane-tag">A · 本机体验</span><h3>npm 全栈本地跑</h3><div className="lane-flow"><span>Node ≥ 24 + uv</span><ArrowRight size={12} aria-hidden="true" /><span>agent-canvas</span><ArrowRight size={12} aria-hidden="true" /><span>localhost:8000</span></div><p>最快但无隔离：官方明确警告 Agent 将以你的账户权限读写文件系统。只用于可信机器上的体验。</p></div>
-      <div className="deploy-lane green"><span className="lane-tag">B · 本机隔离</span><h3>Docker 单容器</h3><div className="lane-flow"><span>固定 tag 镜像</span><ArrowRight size={12} aria-hidden="true" /><span>挂载 /projects</span><ArrowRight size={12} aria-hidden="true" /><span>127.0.0.1:8000</span></div><p>Canvas 与后端都在容器里，状态落在 openhands-data 卷。再加 OH_CONVERSATION_RUNTIME=docker 可让每个会话再进独立加固容器。</p></div>
-      <div className="deploy-lane blue"><span className="lane-tag">C · 常驻工厂</span><h3>VM + public 模式</h3><div className="lane-flow"><span>防火墙只开 22/443</span><ArrowRight size={12} aria-hidden="true" /><span>--public + API key</span><ArrowRight size={12} aria-hidden="true" /><span>nginx + TLS</span></div><p>systemd 保活，nginx 终结 TLS。API key 不注入页面，所有 /api/* 需 X-Session-API-Key。</p></div>
-    </div>
-    <figcaption>三条路线共用同一套 UI 与事件流；差别只在执行边界与凭证注入方式。Cloud / Enterprise 是托管版本，不在本页自托管范围内。</figcaption>
-  </figure>
+export function FactoryPipelineDiagram({ locale }: { locale: Locale }) {
+  const c=copy[locale].factory,icons=[GitBranch,Bot,FileCode2,GitMerge]
+  return <figure className="paper-diagram factory-diagram"><div className="diagram-topline"><span>{c.topLeft}</span><span>{c.topRight}</span></div><div className="factory-conveyor" aria-label={c.aria}>{c.steps.map((step,index)=>{const Icon=icons[index];return <Fragment key={step.title}><div className={`conveyor-step ${index===0||index===3?'external':'internal'}`}><span>{step.tag}</span><Icon /><strong>{step.title}</strong><p>{step.body}</p></div>{index<3&&<ArrowRight className="conveyor-arrow" />}</Fragment>})}</div><figcaption>{c.caption}</figcaption></figure>
 }
 
-export function FactoryRolesDiagram() {
-  return <div className="explanation-grid">
-    <div className="text-block"><h3><Server size={18} /> 谁决定“何时运行”</h3><p>Automation Server 持有 cron 与 webhook，只负责调度与 dispatch。watchdog 是确定性检查器，不启动 Agent——这是官方设计里最像“工厂质检门”的角色。</p></div>
-    <div className="text-block"><h3><Workflow size={18} /> 谁决定“运行什么”</h3><p>Agent Server 与 SDK 负责会话、工具与事件流。Agent Profile 把模型、secrets、MCP 服务器和子 Agent 开关打包成可复用身份，让每段流水线各拿各的钥匙。</p></div>
-    <div className="text-block"><h3><Globe size={18} /> 谁在边界之外</h3><p>Canvas 浏览器端不接触文件系统；GitHub 合并权限在 watchdog 的确定性逻辑与仓库分支保护里。任何一段都不该同时拥有“写代码”和“合并代码”两种凭证。</p></div>
-    <div className="text-block"><h3><Check size={18} /> 官方跑通的证据</h3><p>官方软件工厂文档记录了对演示仓库的完整走查：六个 Issue 分诊后六个开发会话并发进入 Docker，评审 Agent 逐个验收，watchdog 完成合并。这是官方记录，不是本站复测。</p></div>
-  </div>
+export function DeployRoutesDiagram({ locale }: { locale: Locale }) {
+  const c=copy[locale].deployment
+  return <figure className="paper-diagram deployment-diagram"><div className="diagram-topline"><span>{c.topLeft}</span><span>{c.topRight}</span></div><div className="deployment-lanes">{c.lanes.map((lane,index)=><div className={`deploy-lane ${['yellow','green','blue'][index]}`} key={lane.tag}><span className="lane-tag">{lane.tag}</span><h3>{lane.title}</h3><div className="lane-flow"><span>{lane.flow[0]}</span><ArrowRight size={12} aria-hidden="true" /><span>{lane.flow[1]}</span><ArrowRight size={12} aria-hidden="true" /><span>{lane.flow[2]}</span></div><p>{lane.body}</p></div>)}</div><figcaption>{c.caption}</figcaption></figure>
+}
+
+export function FactoryRolesDiagram({ locale }: { locale: Locale }) {
+  const c=copy[locale].factory,icons=[Server,Workflow,Globe,Check]
+  return <div className="explanation-grid">{c.roles.map((role,index)=>{const Icon=icons[index];return <div className="text-block" key={role.title}><h3><Icon size={18} /> {role.title}</h3><p>{role.body}</p></div>})}</div>
 }

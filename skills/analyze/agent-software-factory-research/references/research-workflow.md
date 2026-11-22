@@ -5,8 +5,9 @@
 1. 完整读取宿主 GitHub 流程，再按规定顺序执行站点检查、当日成功记录检查和安全同步。
 2. 只有站点检查允许原地迭代时才继续。缺失项目按既有版本或快照恢复，不重建网站。
 3. 同步后确认工作区干净、HEAD 与 `origin/main` 一致。main 领先、分叉或远端异常时停止。
-4. 用 `scripts/select_candidate.py` 过滤 solutions 与 orphaned_entries 中已有 slug。不要仅凭候选的 pending 状态判断未收录。
-5. 搜索同 slug 的打开和已关闭 Issue/PR；复用已有记录，核验范围后更新，不重复创建。
+4. 需要扩搜时，先读 `references/discovery-sources.md`，将审核结果通过 `discover_candidates.py --dry-run` 检查；正式入池必须经宿主启用，不能手工写 candidates。
+5. 用 `scripts/select_candidate.py` 过滤 solutions 与 orphaned_entries 中已有 slug。不要仅凭候选的 pending 状态判断未收录；启用评分后使用 `--strategy ranked`。
+6. 搜索同 slug 的打开和已关闭 Issue/PR；复用已有记录，核验范围后更新，不重复创建。
 
 ## 2. 选题 Issue 合同
 

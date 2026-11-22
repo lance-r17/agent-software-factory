@@ -1,6 +1,6 @@
 ---
 name: agent-software-factory-research
-description: 每天只调研并收录一个新的 Agent Software Factory 开源方案，完成候选去重、官方资料与实测证据分级、双语详情页和可安装部署 Skill、生产浏览器验收、网站快照以及 GitHub Issue/PR 交接。用于每日定时研究、solution 分支页面生成、方案库维护或复现本仓库的研究流水线；不用于重建网站、批量收录、自动合并或伪造执行记录。
+description: 每天只调研并收录一个新的 Agent Software Factory 开源方案，完成多来源候选发现、候选去重与可解释排序、官方资料与实测证据分级、双语详情页和可安装部署 Skill、生产浏览器验收、网站快照以及 GitHub Issue/PR 交接。用于每日定时研究、solution 分支页面生成、方案库维护或复现本仓库的研究流水线；不用于重建网站、批量收录、自动合并或伪造执行记录。
 ---
 
 # Agent Software Factory 每日研究
@@ -34,9 +34,21 @@ description: 每天只调研并收录一个新的 Agent Software Factory 开源�
 
 按宿主规定顺序运行站点检查、当日防重和安全同步。禁止 `reset --hard`、`clean -fd`、强制 checkout 和强推。
 
-### 2. 选择唯一候选
+### 2. 发现并选择唯一候选
 
-在本 Skill 根目录运行：
+读取 `references/discovery-sources.md` 和 `assets/discovery-queries.json`，按白名单来源扩搜。把 Agent 审核后的候选整理到 `/tmp/discovery-curated.json`，第一阶段只运行 dry-run：
+
+```bash
+python3 scripts/discover_candidates.py import \
+  --input /tmp/discovery-curated.json \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --dry-run
+```
+
+dry-run 不写 state。未经审核的搜索结果不得直接入池；正式导入和 ranked 选题必须在宿主明确启用后执行。发现失败时回退到现有候选池。
+
+选择时运行：
 
 ```bash
 python3 scripts/select_candidate.py \
@@ -44,7 +56,7 @@ python3 scripts/select_candidate.py \
   --researched /path/to/state/researched.json
 ```
 
-`status=stop` 时结束当天任务；`status=empty` 时报告候选池为空；只有 `status=selected` 才继续。搜索并复用同 slug 的 Issue/PR，不重复创建。
+启用评分后增加 `--strategy ranked`。`status=stop` 时结束当天任务；`status=empty` 时报告候选池为空；只有 `status=selected` 才继续。搜索并复用同 slug 的 Issue/PR，不重复创建。
 
 ### 3. 研究并固定证据边界
 
@@ -74,8 +86,12 @@ python3 scripts/validate_repository.py --repo-root /path/to/repository
 
 ## 按需资源
 
+- `references/discovery-sources.md`：来源白名单、审核输入、dry-run、评分和上线策略。
+- `assets/discovery-queries.json`：分来源查询、结果上限和失败策略。
 - `references/research-workflow.md`：候选、Issue、证据分级、隔离核验、GitHub 和状态记录细则。
 - `references/page-authoring.md`：现有 React/HashRouter 页面的双语实现与 Skill 注册合同。
 - `references/acceptance.md`：构建、浏览器、快照、安全和 PR 验收清单。
+- `scripts/discover_candidates.py`：审核后候选的规范化、去重、原子导入和 dry-run。
+- `scripts/rank_candidates.py`：硬门槛、可解释评分和稳定排序。
 - `scripts/select_candidate.py`：确定性防重和候选选择；只读，不写 state。
 - `scripts/validate_repository.py`：校验 Skill 包、资源引用和网页 raw import 注册表；需要 Python 3 与 PyYAML。

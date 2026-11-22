@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "defaults": {
+    "max_results_per_query": 5,
+    "network_retries": 1,
+    "mode": "dry-run"
+  },
+  "sources": [
+    {
+      "id": "github",
+      "enabled": true,
+      "kind": "structured_api",
+      "domains": ["github.com", "api.github.com"],
+      "queries": [
+        "software engineering agent in:name,description",
+        "issue to pull request agent in:name,description,readme",
+        "repository level coding agent in:name,description,readme",
+        "multi agent software development in:name,description,readme"
+      ]
+    },
+    {
+      "id": "academic-primary",
+      "enabled": true,
+      "kind": "agent_web_search",
+      "domains": ["arxiv.org", "openreview.net", "aclanthology.org", "dl.acm.org", "ieeexplore.ieee.org"],
+      "queries": [
+        "agentic software engineering official code",
+        "repository level issue resolution official code",
+        "automated program repair large language model agent official code",
+        "multi agent software development official implementation"
+      ]
+    },
+    {
+      "id": "swe-bench-ecosystem",
+      "enabled": true,
+      "kind": "agent_web_search",
+      "domains": ["swebench.com", "github.com", "huggingface.co"],
+      "queries": [
+        "SWE-bench agent official repository",
+        "SWE-bench patch generation tool official code"
+      ]
+    },
+    {
+      "id": "research-artifacts",
+      "enabled": true,
+      "kind": "agent_web_search",
+      "domains": ["huggingface.co", "zenodo.org", "pypi.org", "npmjs.com"],
+      "queries": [
+        "software engineering agent research artifact",
+        "coding agent CLI official repository"
+      ]
+    },
+    {
+      "id": "scholarly-graph",
+      "enabled": false,
+      "kind": "optional_structured_api",
+      "domains": ["api.openalex.org", "api.semanticscholar.org"],
+      "queries": [
+        "software engineering agents",
+        "repository level code repair agent"
+      ],
+      "failure_policy": "skip_source_after_one_retry"
+    },
+    {
+      "id": "chinese-discovery",
+      "enabled": true,
+      "kind": "agent_web_search",
+      "domains": ["gitee.com", "oschina.net", "infoq.cn", "juejin.cn"],
+      "queries": [
+        "开源 软件工程 Agent 官方仓库",
+        "多智能体 软件开发 开源实现"
+      ],
+      "trust": "leads_only_until_official_repository_verified"
+    }
+  ]
+}

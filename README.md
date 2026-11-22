@@ -25,6 +25,40 @@ check_site.py + 防重检查 → 安全检查并同步最新 GitHub main
 - **发布即 Actions**：merge 到 main 触发 `.github/workflows/pages.yml`，从源码构建并部署 Pages。公开站只包含审阅通过的内容。
 - **历史方案**：OpenHands Agent Canvas v1.43.0、mini-SWE-agent v2.4.6、SWE-agent v1.1.0 为建仓前已收录方案，不补建方案 issue/PR；全站双语功能由独立 feature 分支和 PR 交付。
 
+## 可安装 Skills
+
+部署手册正文独立于网页注册表，按 Agent Skills 开放格式存储。网页通过 Vite `?raw` 在构建时读取 Markdown，因此现有同步渲染、全文模态框、复制和下载不依赖运行时请求。
+
+```text
+skills/
+├── deploy/
+│   ├── zh-CN/<skill-name>/SKILL.md
+│   └── en/<skill-name>/SKILL.md
+└── analyze/
+    └── agent-software-factory-research/
+        ├── SKILL.md
+        ├── scripts/
+        └── references/
+```
+
+每个目录名必须与 SKILL.md frontmatter 的 `name` 一致。安装时只复制所需语言或工作流目录，避免同名中英文 Skill 在同一作用域冲突。例如：
+
+```bash
+mkdir -p ~/.agents/skills
+cp -R skills/deploy/zh-CN/mini-swe-agent-deploy ~/.agents/skills/
+cp -R skills/analyze/agent-software-factory-research ~/.agents/skills/
+```
+
+Claude Code 等使用其他发现目录的客户端，可以改为复制到宿主指定位置。开放格式统一的是 Skill 包结构，不是各客户端的安装路径或权限模型。
+
+每日定时任务在代码合并后读取 `skills/analyze/agent-software-factory-research/SKILL.md`；候选与已研究 state 仍由任务数据目录持有，不进入 Git。新增方案手册时，不再把 Markdown 正文嵌入 `deploySkills.ts` 或 `deploySkillsEn.ts`。
+
+在仓库根目录校验所有 Skill、资源引用和网页注册表：
+
+```bash
+python3 skills/analyze/agent-software-factory-research/scripts/validate_repository.py --repo-root .
+```
+
 ## 已收录方案
 
 | 方案 | 版本 | 中文路由 | 英文路由 | 核验日期 |
@@ -32,6 +66,7 @@ check_site.py + 防重检查 → 安全检查并同步最新 GitHub main
 | OpenHands Agent Canvas | v1.43.0 | `#/solutions/openhands-agent-canvas` | `#/en/solutions/openhands-agent-canvas` | 2026-11-20 |
 | mini-SWE-agent | v2.4.6 | `#/solutions/mini-swe-agent` | `#/en/solutions/mini-swe-agent` | 2026-11-21 |
 | SWE-agent（遗产版） | v1.1.0 | `#/solutions/swe-agent` | `#/en/solutions/swe-agent` | 2026-11-21 |
+| Agentless | v1.5.0 | `#/solutions/agentless` | `#/en/solutions/agentless` | 2026-11-22 |
 
 ## 安全红线
 

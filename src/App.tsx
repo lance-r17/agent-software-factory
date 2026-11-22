@@ -5,7 +5,6 @@ import OpenHandsAgentCanvas from './pages/OpenHandsAgentCanvas'
 import SweAgent from './pages/SweAgent'
 import Agentless from './pages/Agentless'
 import OpenHandsAgentCanvasEn from './pages/OpenHandsAgentCanvasEn'
-import SweAgentEn from './pages/SweAgentEn'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -13,12 +12,12 @@ export default function App() {
     <Route path="/" element={<Home />} />
     <Route path="/solutions/mini-swe-agent" element={<MiniSweAgent locale="zh" />} />
     <Route path="/solutions/openhands-agent-canvas" element={<OpenHandsAgentCanvas />} />
-    <Route path="/solutions/swe-agent" element={<SweAgent />} />
+    <Route path="/solutions/swe-agent" element={<SweAgent locale="zh" />} />
     <Route path="/solutions/agentless" element={<Agentless locale="zh" />} />
     <Route path="/en" element={<Home locale="en" />} />
     <Route path="/en/solutions/mini-swe-agent" element={<MiniSweAgent locale="en" />} />
     <Route path="/en/solutions/openhands-agent-canvas" element={<OpenHandsAgentCanvasEn />} />
-    <Route path="/en/solutions/swe-agent" element={<SweAgentEn />} />
+    <Route path="/en/solutions/swe-agent" element={<SweAgent locale="en" />} />
     <Route path="/en/solutions/agentless" element={<Agentless locale="en" />} />
     <Route path="*" element={<NotFound />} />
   </Routes>

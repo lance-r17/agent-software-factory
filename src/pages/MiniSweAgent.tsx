@@ -262,6 +262,14 @@ export default function MiniSweAgent() {
 
       <section className="page-width detail-section" id="automation">
         <SectionHeading kicker="08 · AUTOMATION GATE" title="自动化接入：让外层系统接单，让 CI 决定是否交付" intro="v2 已移除旧的专用 github_issue 脚本。不要把 v1 教程里的入口照搬到新项目；用外层调度器取 Issue，再调用 mini CLI。" />
+        <div className="component-table-wrap">
+          <table className="component-table"><caption className="sr-only">mini-SWE-agent 外层自动化职责与权限边界</caption><thead><tr><th>环节</th><th>输入与权限</th><th>职责</th><th>明确边界</th></tr></thead><tbody>
+            <tr><th><span className="component-chip yellow">outer-scheduler</span></th><td>已批准 Issue、run_id、工作区副本</td><td>取任务、写配置、准备一次性运行环境。</td><td>不暴露宿主其他目录或长期凭据。</td></tr>
+            <tr><th><span className="component-chip green">mini-cli</span></th><td>模型配置、限权工作区</td><td>执行最小循环，保存轨迹并生成 submission。</td><td>不持有 GitHub Token，不负责推送或合并。</td></tr>
+            <tr><th><span className="component-chip pink">ci-review</span></th><td>补丁、轨迹、仓库测试</td><td>检查 diff，在干净环境跑 CI，并进行人工审阅。</td><td>进程退出或 Submitted 不等于验收通过。</td></tr>
+            <tr><th><span className="component-chip blue">outer-delivery</span></th><td>已批准变更、独立 GitHub 凭据</td><td>在检查全绿后推送分支并创建 PR。</td><td>交付凭据与 mini 运行环境分离；不自动合并。</td></tr>
+          </tbody></table>
+        </div>
         <div className="automation-layout"><CodeBlock title="03 · 接单到补丁的外层流水线示例" code={AUTOMATION_CODE} /><div className="automation-notes"><h3>接入前必须回答</h3><ol><li><span>1</span><p><strong>谁能触发？</strong> Issue 文本是不可信输入，公开仓库触发器应先经过维护者批准。</p></li><li><span>2</span><p><strong>谁能写？</strong> 只挂工作区副本；GitHub Token 不进入容器，推送由外层独立步骤完成。</p></li><li><span>3</span><p><strong>什么叫成功？</strong> Submitted + diff 检查 + 完整 CI + 人工审阅，缺一项都不合并。</p></li><li><span>4</span><p><strong>如何重试？</strong> 新 run_id、新容器、新工作区；不要在失败现场盲目重放危险命令。</p></li></ol></div></div>
         <div className="config-warning"><AlertTriangle /><p><strong>最常见的 v2 配置坑：</strong>一旦使用 <code>-c</code>，内置默认配置不会自动作为基底加载。覆盖某个字段时也要写 <code>-c mini.yaml -c your.yaml</code>，否则可能连模板都缺失。</p></div>
       </section>

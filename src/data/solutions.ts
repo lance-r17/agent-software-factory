@@ -14,6 +14,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'agentless', title: 'Agentless', subtitle: '不用自由工具循环，把修复拆成定位、生成、验证选择',
+    description: 'OpenAutoCoder 的 MIT 研究流水线：层级定位、多样本补丁、回归 / 复现测试与多数投票。适合研究固定流程和 SWE-bench 复现；官方依赖未锁定，本页给出 2026 年实测兼容组合。',
+    version: 'v1.5.0', license: 'MIT', stars: '2.1k', verifiedAt: '2026-11-22',
+    tags: ['Python 3.11', 'SWE-bench', '固定流水线', 'JSONL 证据'], category: '编程 Agent', tone: 'blue',
+  },
+  {
     slug: 'swe-agent', title: 'SWE-agent', subtitle: 'SWE-bench 时代的高影响力 Agent 框架，现由 mini 接棒',
     description: 'Python ≥ 3.11 的 MIT 研究框架，完整呈现 ACI、工具束、轨迹与批量实验。官方已进入维护模式并推荐 mini-SWE-agent；本页固定 v1.1.0，保留源码复现、Docker / Modal 路线与历史迁移边界。',
     version: 'v1.1.0', license: 'MIT', stars: '遗产研究', verifiedAt: '2026-11-21',
@@ -34,6 +40,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'agentless', title: 'Agentless', subtitle: 'A fixed pipeline for localization, repair, validation, and selection',
+    description: 'OpenAutoCoder’s MIT-licensed research pipeline: hierarchical localization, multi-sample patches, regression / reproduction tests, and majority voting. Useful for studying fixed pipelines and SWE-bench reproduction; its official dependencies are unpinned, so this page records a compatibility combination verified in 2026.',
+    version: 'v1.5.0', license: 'MIT', stars: '2.1k', verifiedAt: '2026-11-22',
+    tags: ['Python 3.11', 'SWE-bench', 'Fixed pipeline', 'JSONL evidence'], category: '编程 Agent', tone: 'blue',
+  },
   {
     slug: 'swe-agent', title: 'SWE-agent', subtitle: 'The influential SWE-bench-era agent framework, now succeeded by mini',
     description: 'An MIT-licensed research framework requiring Python 3.11 or later, with a complete ACI, tool bundles, trajectories, and batch experiments. The official project is in maintenance mode and recommends mini-SWE-agent. This analysis pins v1.1.0 and preserves source reproduction, Docker / Modal routes, and migration boundaries.',

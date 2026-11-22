@@ -2,6 +2,7 @@ import openHandsDeployMarkdownEn from '../../skills/deploy/en/openhands-agent-ca
 import miniSweAgentDeployMarkdownEn from '../../skills/deploy/en/mini-swe-agent-deploy/SKILL.md?raw'
 import sweAgentDeployMarkdownEn from '../../skills/deploy/en/swe-agent-legacy-deploy/SKILL.md?raw'
 import agentlessDeployMarkdownEn from '../../skills/deploy/en/agentless-deploy/SKILL.md?raw'
+import metagptDeployMarkdownEn from '../../skills/deploy/en/metagpt-deploy/SKILL.md?raw'
 import type { DeploySkill } from './deploySkills'
 
 export const openHandsDeploySkillEn: DeploySkill = {
@@ -43,4 +44,15 @@ export const agentlessDeploySkillEn: DeploySkill = {
   routes: [{ id: 'A', label: 'Compatible environment' }, { id: 'B', label: 'Hierarchical localization' }, { id: 'C', label: 'Multi-sample repair' }, { id: 'D', label: 'Validation and selection' }, { id: 'E', label: 'Cost audit' }],
   outline: ['01 Hard prerequisites', '02 Dependency drift and verified pins', '03 Choose a route', '04 Source installation and CLI checks', '05 Model, dataset, and directory boundaries', '06 Official SWE-bench phase commands', '07 Outer automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backup, and cost control', '11 Security red lines and sources'],
   content: agentlessDeployMarkdownEn,
+}
+
+
+export const metagptDeploySkillEn: DeploySkill = {
+  slug: 'metagpt',
+  title: 'MetaGPT deployment manual',
+  description: 'An independent SKILL.md instruction set pinning v0.8.1 and its commit, documenting tested LanceDB / Click compatibility, with offline verification, documentation-first, isolated full-generation, and serialized-recovery routes plus secret boundaries, acceptance, and troubleshooting.',
+  version: 'MetaGPT v0.8.1', verifyDate: '2026-11-23', fileName: 'metagpt-deploy-en.md', accent: 'pink',
+  routes: [{ id: 'A', label: 'Offline verification' }, { id: 'B', label: 'Documentation first' }, { id: 'C', label: 'Isolated full generation' }, { id: 'D', label: 'Serialized recovery' }],
+  outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: fixed source and compatibility installation', '04 Offline configuration, imports, and CLI checks', '05 Real model configuration', '06 Route B: documentation first', '07 Route C: isolated full generation and QA', '08 Route D: serialized recovery', '09 Outer automation gates', '10 Eight acceptance gates', '11 Troubleshooting', '12 Upgrades, backups, security red lines, and sources'],
+  content: metagptDeployMarkdownEn,
 }

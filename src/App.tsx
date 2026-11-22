@@ -4,6 +4,7 @@ import MiniSweAgent from './pages/MiniSweAgent'
 import OpenHandsAgentCanvas from './pages/OpenHandsAgentCanvas'
 import SweAgent from './pages/SweAgent'
 import Agentless from './pages/Agentless'
+import MetaGPT from './pages/MetaGPT'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -13,11 +14,13 @@ export default function App() {
     <Route path="/solutions/openhands-agent-canvas" element={<OpenHandsAgentCanvas locale="zh" />} />
     <Route path="/solutions/swe-agent" element={<SweAgent locale="zh" />} />
     <Route path="/solutions/agentless" element={<Agentless locale="zh" />} />
+    <Route path="/solutions/metagpt" element={<MetaGPT locale="zh" />} />
     <Route path="/en" element={<Home locale="en" />} />
     <Route path="/en/solutions/mini-swe-agent" element={<MiniSweAgent locale="en" />} />
     <Route path="/en/solutions/openhands-agent-canvas" element={<OpenHandsAgentCanvas locale="en" />} />
     <Route path="/en/solutions/swe-agent" element={<SweAgent locale="en" />} />
     <Route path="/en/solutions/agentless" element={<Agentless locale="en" />} />
+    <Route path="/en/solutions/metagpt" element={<MetaGPT locale="en" />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 }

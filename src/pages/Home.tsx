@@ -54,7 +54,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
         <p>{c.hero.body}</p>
         <div className="hero-actions">
           <Link className="primary-link" to={{ pathname: homePath, hash: '#library' }}>{c.hero.browse} <ArrowDown size={18} /></Link>
-          <Link className="text-link" to={isEnglish ? '/en/solutions/agentless' : '/solutions/agentless'}>{c.hero.latest} <ArrowRight size={17} /></Link>
+          <Link className="text-link" to={isEnglish ? '/en/solutions/metagpt' : '/solutions/metagpt'}>{c.hero.latest} <ArrowRight size={17} /></Link>
         </div>
       </div>
       <div className="hero-sketch" role="img" aria-label={c.hero.sketchAria}>

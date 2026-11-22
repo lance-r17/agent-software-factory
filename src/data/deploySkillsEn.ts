@@ -7,10 +7,10 @@ import type { DeploySkill } from './deploySkills'
 export const openHandsDeploySkillEn: DeploySkill = {
   slug: 'openhands-agent-canvas',
   title: 'OpenHands Agent Canvas deployment manual',
-  description: 'A complete SKILL.md instruction set for coding Agents, including host preparation, CLI / source / Docker routes, GitHub automation, acceptance, and troubleshooting.',
-  version: 'OpenHands Agent Canvas v1.43.0', verifyDate: '2026-11-20', fileName: 'openhands-agent-canvas-en.md', accent: 'pink',
-  routes: [{ id: 'A', label: 'Official CLI' }, { id: 'B', label: 'Global npm' }, { id: 'C', label: 'Source development' }, { id: 'D', label: 'Headless + Docker' }],
-  outline: ['01 Scope & version contract', '02 Choose a route', '03 Dependencies & directories', '04 Environment & secrets', '05 Exact commands', '06 GitHub PR automation', '07 Acceptance checklist', '08 Troubleshooting', '09 Risks & lifecycle'],
+  description: 'A complete SKILL.md instruction set for coding Agents, including four trust-boundary deployment routes, exact commands, secret and state management, official software-factory integration, eight acceptance gates, troubleshooting, upgrades, backups, and security red lines.',
+  version: 'OpenHands Agent Canvas v1.43.0', verifyDate: '2026-11-21', fileName: 'openhands-agent-canvas-en.md', accent: 'pink',
+  routes: [{ id: 'A', label: 'Local npm full stack' }, { id: 'B', label: 'Single Docker container' }, { id: 'C', label: 'Container per conversation' }, { id: 'D', label: 'Persistent VM service' }],
+  outline: ['00 Hard prerequisites (Node >= 24 / uv / Docker)', '01 Four-route selection table', '02 Route A: local npm full stack', '03 Route B: single Docker container', '04 Route C: container per conversation', '05 Route D: persistent VM service', '06 Secrets and state management', '07 Optional official software-factory integration', '08 Eight acceptance gates', '09 Troubleshooting (8 items)', '10 Upgrades and backups', '11 Security red lines and sources'],
   content: openHandsDeployMarkdownEn,
 }
 

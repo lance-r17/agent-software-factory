@@ -2,6 +2,8 @@
 
 ## 1. Skill 与构建验证
 
+- 候选发现功能先运行 `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py`，覆盖 dry-run 零写入、URL 与 fork 去重、原子导入、平分排序和旧版回退。
+- 真实扩搜先 dry-run，核对来源错误和审核结果；未启用正式入池时不得改写 candidates 或 discovery history。
 - 每个 Skill 都有 `SKILL.md`，frontmatter 仅使用开放规范字段。
 - `name` 符合小写连字符规则并匹配父目录；description 非空且不超过 1024 字符。
 - metadata 的键和值都是字符串；SKILL.md 建议少于 500 行。

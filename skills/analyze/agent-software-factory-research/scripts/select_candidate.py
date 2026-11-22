@@ -34,6 +34,7 @@ def main() -> None:
     parser.add_argument("--researched", type=Path, required=True)
     parser.add_argument("--date", default=datetime.now(ZoneInfo("Asia/Shanghai")).date().isoformat())
     parser.add_argument("--slug", help="Explicitly select one pending candidate from the pool")
+    parser.add_argument("--strategy", choices=["file-order", "ranked"], default="file-order")
     args = parser.parse_args()
 
     candidate_data = load_json(args.candidates)
@@ -71,6 +72,30 @@ def main() -> None:
         if not matches:
             raise SystemExit(f"Pending candidate not found: {args.slug}")
         selected = matches[0]
+    elif args.strategy == "ranked":
+        ranked = [
+            item for item in pending
+            if item.get("ranking", {}).get("eligible") is True
+            and isinstance(item.get("ranking", {}).get("total"), (int, float))
+        ]
+        if not ranked:
+            emit("empty", args.date, reason="no_ranked_pending_candidates")
+            return
+        ranked.sort(key=lambda item: (
+            -item["ranking"]["total"], item.get("discovered_date", "9999-12-31"), item["slug"]
+        ))
+        selected = ranked[0]
+        emit(
+            "selected", args.date,
+            candidate=selected,
+            strategy="ranked",
+            selection_reason=selected.get("selection_reason"),
+            score_breakdown=selected.get("ranking", {}).get("score_breakdown"),
+            compared_candidates=[
+                {"slug": item["slug"], "total": item["ranking"]["total"]} for item in ranked
+            ],
+        )
+        return
     elif pending:
         selected = pending[0]
     else:

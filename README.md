@@ -38,7 +38,8 @@ skills/
     └── agent-software-factory-research/
         ├── SKILL.md
         ├── scripts/
-        └── references/
+        ├── references/
+        └── assets/discovery-queries.json
 ```
 
 每个目录名必须与 SKILL.md frontmatter 的 `name` 一致。安装时只复制所需语言或工作流目录，避免同名中英文 Skill 在同一作用域冲突。例如：
@@ -58,6 +59,21 @@ Claude Code 等使用其他发现目录的客户端，可以改为复制到宿�
 ```bash
 python3 skills/analyze/agent-software-factory-research/scripts/validate_repository.py --repo-root .
 ```
+
+候选扩搜第一阶段只运行 dry-run。Agent 先把审核后的官方来源整理到 `/tmp/discovery-curated.json`，再执行：
+
+```bash
+cd skills/analyze/agent-software-factory-research
+python3 scripts/discover_candidates.py import \
+  --input /tmp/discovery-curated.json \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --dry-run
+python3 scripts/rank_candidates.py --candidates /path/to/state/candidates.json
+(cd scripts && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py)
+```
+
+dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定时任务切换必须在审核通过后显式启用。
 
 ## 已收录方案
 

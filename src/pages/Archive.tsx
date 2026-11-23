@@ -14,6 +14,7 @@ const content = {
     columns: ['方案', '冻结版本', '调研日期', '归档日期', '归档原因'],
     detail: '查看完整调研',
     successor: '继任方案',
+    evidence: '归档证据',
     home: '返回方案库',
   },
   en: {
@@ -25,6 +26,7 @@ const content = {
     columns: ['Solution', 'Pinned version', 'Researched', 'Archived', 'Reason'],
     detail: 'Read the full research',
     successor: 'Successor',
+    evidence: 'Archive evidence',
     home: 'Back to the library',
   },
 }
@@ -55,6 +57,9 @@ export default function ArchivePage({ locale = 'zh' }: { locale?: Locale }) {
               <p className="archive-reason"><Archive size={15} aria-hidden="true" />{solution.archiveReason}</p>
               <div className="archive-links">
                 <Link className="text-link" to={path}>{c.detail} <ArrowUpRight size={15} /></Link>
+                {solution.archiveEvidenceUrl && <a className="text-link" href={solution.archiveEvidenceUrl} target="_blank" rel="noreferrer">
+                  {c.evidence} <ArrowUpRight size={15} />
+                </a>}
                 {solution.successorSlug && <Link className="text-link" to={`${isEnglish ? '/en' : ''}/solutions/${solution.successorSlug}`}>
                   {c.successor}: {solution.successorSlug} <ArrowUpRight size={15} />
                 </Link>}

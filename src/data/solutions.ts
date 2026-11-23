@@ -13,6 +13,7 @@ export type Solution = {
   lifecycle?: 'active' | 'watch' | 'archived'
   archivedAt?: string
   archiveReason?: string
+  archiveEvidenceUrl?: string
   successorSlug?: string
 }
 
@@ -36,6 +37,7 @@ export const solutions: Solution[] = [
     tags: ['Python ≥ 3.11', 'SWE-ReX', 'ACI', '研究 / 批处理'], category: '编程 Agent', tone: 'yellow',
     lifecycle: 'archived', archivedAt: '2026-11-23',
     archiveReason: '官方 README 声明开发重心已转向 mini-SWE-agent（superseded）。',
+    archiveEvidenceUrl: 'https://github.com/SWE-agent/SWE-agent#readme',
     successorSlug: 'mini-swe-agent',
   },
   {
@@ -72,6 +74,7 @@ export const solutionsEn: Solution[] = [
     tags: ['Python ≥ 3.11', 'SWE-ReX', 'ACI', 'Research / batches'], category: '编程 Agent', tone: 'yellow',
     lifecycle: 'archived', archivedAt: '2026-11-23',
     archiveReason: 'The official README states that active development has moved to mini-SWE-agent (superseded).',
+    archiveEvidenceUrl: 'https://github.com/SWE-agent/SWE-agent#readme',
     successorSlug: 'mini-swe-agent',
   },
   {

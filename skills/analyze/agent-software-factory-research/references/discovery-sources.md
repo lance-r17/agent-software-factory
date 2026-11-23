@@ -83,15 +83,15 @@ python3 scripts/discover_candidates.py import \
   --dry-run
 ```
 
-`import` 是默认子命令，可以省略。定时任务第一阶段只执行 dry-run。正常运行会在线解析仓库重定向；离线 fixture 测试使用 `--resolver-fixture /tmp/resolver-fixture.json`，不得把 fixture 当作正式来源证据。
+`import` 是默认子命令，可以省略。正常运行会在线解析仓库重定向；离线 fixture 测试使用 `--resolver-fixture /tmp/resolver-fixture.json`，不得把 fixture 当作正式来源证据。
 
-正式启用后才省略 `--dry-run` 并增加：
+正式导入（Issue #25 起启用）在 dry-run 预检结果与审核预期一致后执行，省略 `--dry-run` 并增加：
 
 ```bash
   --history /path/to/state/discovery-history.json
 ```
 
-dry-run 对 candidates 和 history 零写入。正式导入使用原子替换，重复候选不会重复追加；历史默认最多保留 30 次运行。
+dry-run 对 candidates 和 history 零写入。正式导入使用原子替换，重复候选不会重复追加；历史默认最多保留 30 次运行。每次正式导入后记录 candidates、researched 与 history 的 SHA-256，变更范围不得超过 candidates 与 history。
 
 ## 5. 评分与选择
 
@@ -117,4 +117,4 @@ cd scripts
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py
 ```
 
-先用 fixture 验证，再运行真实来源 dry-run。观察重复率、无关项目比例、官方仓库识别和来源错误，审核通过后才允许正式入池及 ranked 定时选择。PENDING 或当天成功记录始终优先于发现。
+先用 fixture 验证，再运行真实来源 dry-run。观察重复率、无关项目比例、官方仓库识别和来源错误；审核结果经宿主确认后方可正式入池，入池候选参与 ranked 定时选择。PENDING 或当天成功记录始终优先于发现。

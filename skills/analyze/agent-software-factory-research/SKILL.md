@@ -36,27 +36,42 @@ description: 每天只调研并收录一个新的 Agent Software Factory 开源�
 
 ### 2. 发现并选择唯一候选
 
-读取 `references/discovery-sources.md` 和 `assets/discovery-queries.json`，按白名单来源扩搜。把 Agent 审核后的候选整理到 `/tmp/discovery-curated.json`，第一阶段只运行 dry-run：
+读取 `references/discovery-sources.md` 和 `assets/discovery-queries.json`，按白名单来源扩搜。把 Agent 审核后的候选整理到 `/tmp/discovery-curated.json`。未经审核的搜索结果不得直接入池；审核必须给出 decision、许可证证据和评分依据。
+
+正式管线顺序（Issue #25 起启用）：
 
 ```bash
+# 1. dry-run 预检：收录/重复/拒绝与 source_errors 必须符合审核预期
 python3 scripts/discover_candidates.py import \
   --input /tmp/discovery-curated.json \
   --candidates /path/to/state/candidates.json \
   --researched /path/to/state/researched.json \
   --dry-run
+
+# 2. 正式入池：原子写入 candidates 与发现历史
+python3 scripts/discover_candidates.py import \
+  --input /tmp/discovery-curated.json \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --history /path/to/state/discovery-history.json
+
+# 3. 写入 ranking
+python3 scripts/rank_candidates.py \
+  --candidates /path/to/state/candidates.json --write
 ```
 
-dry-run 不写 state。未经审核的搜索结果不得直接入池；正式导入和 ranked 选题必须在宿主明确启用后执行。发现失败时回退到现有候选池。
+每次正式入池前必须先用同一输入跑 dry-run 预检并核对结果一致；正式导入后校验除 candidates 与 history 外的 state 文件未变。发现失败（网络、审核不通过或零收录）时回退到现有候选池，不降低质量标准。
 
 选择时运行：
 
 ```bash
 python3 scripts/select_candidate.py \
   --candidates /path/to/state/candidates.json \
-  --researched /path/to/state/researched.json
+  --researched /path/to/state/researched.json \
+  --strategy ranked
 ```
 
-启用评分后增加 `--strategy ranked`。`status=stop` 时结束当天任务；`status=empty` 时报告候选池为空；只有 `status=selected` 才继续。搜索并复用同 slug 的 Issue/PR，不重复创建。
+ranked 模式只在通过硬门槛且有 ranking 元数据的候选中按总分选题；没有合格候选时返回 `empty`，不会悄悄退回旧顺序。`status=stop` 时结束当天任务；`status=empty` 时报告候选池为空；只有 `status=selected` 才继续。搜索并复用同 slug 的 Issue/PR，不重复创建。
 
 ### 3. 研究并固定证据边界
 

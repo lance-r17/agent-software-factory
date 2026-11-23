@@ -10,6 +10,8 @@ metadata:
 
 # SWE-agent v1.1.0 部署手册（遗产版）
 
+> **归档提示**：本站已于 2026-11-23 将 SWE-agent 归档（官方 README 声明 mini-SWE-agent 已 supersede 本项目）。本手册保留 2026-11-21 的核验内容，仅供历史参考；新项目请改用 mini-SWE-agent 的部署手册。
+
 你是负责执行的 AI Agent。严格遵守：不发明命令、不跳过自检、不越过安全红线。事实核验日期 2026-11-21。官方 README 与文档已声明 mini-SWE-agent 取代 SWE-agent，SWE-agent 处于 maintenance-only 模式；本手册只用于历史兼容、研究对照和既有 pipeline 复现。
 
 ## 0. 硬性前置检查（不通过就停下并报告）

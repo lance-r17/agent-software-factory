@@ -5,6 +5,8 @@ description: Reproduce or maintain the legacy SWE-agent v1.1.0 framework for his
 
 # SWE-agent v1.1.0 legacy deployment execution manual
 
+> **Archive notice**: This solution was archived on 2026-11-23 (the official README states that mini-SWE-agent has superseded SWE-agent). This manual preserves the research verified on 2026-11-21 for historical reference only; use the mini-SWE-agent deployment manual for new work.
+
 > Target version: **SWE-agent v1.1.0**, commit **0f3acafacabc0def8cc76b4e48acb4b6cf302cb9**; facts verified: **2026-11-21**.
 > Evidence: source was cloned and installed in an isolated temporary directory; sweagent --help, run --help, run-batch --help, and trajectory-viewer help succeeded. No model, Docker, real Issue repair, or SWE-bench run was executed.
 > Hard boundaries: model keys stay on the host, GitHub Tokens stay out of containers, and no secret enters YAML or Git. run-batch produces predictions, not proof of correctness; merge remains human-controlled.

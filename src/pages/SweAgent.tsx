@@ -5,6 +5,8 @@ import { CodeBlock, SectionHeading, SourceLink, SourceStrip, copyText } from '..
 import { DeploySkillCard } from '../components/DeploySkill'
 import { PageShell } from '../components/Layout'
 import { RouteTabs } from '../components/RouteTabs'
+import { ArchiveNotice } from '../components/ArchiveNotice'
+import { solutions, solutionsEn } from '../data/solutions'
 import { SweArchitectureDiagram, SweDataEventDiagram, SweDeploymentDiagram, SweWorkflowDiagram } from '../components/SweAgentDiagrams'
 import { sweAgentDeploySkill } from '../data/deploySkills'
 import { sweAgentDeploySkillEn } from '../data/deploySkillsEn'
@@ -65,8 +67,10 @@ export default function SweAgent({ locale }: { locale: Locale }) {
   const homePath = isEnglish ? '/en' : '/'
   const solutionPath = `${isEnglish ? '/en' : ''}/solutions/swe-agent`
   const factoryIcons = [GitPullRequest, Layers3, FileCheck2, Shield]
+  const archivedEntry = (isEnglish ? solutionsEn : solutions).find((item) => item.slug === 'swe-agent')
   return <PageShell>
     <article className="detail-page swe-agent-page">
+      {archivedEntry && <ArchiveNotice solution={archivedEntry} locale={locale} />}
       <header className="detail-hero page-width">
         <div className="breadcrumb"><Link to={homePath}><ArrowLeft size={16} /> {c.hero.breadcrumb}</Link><ChevronRight size={14} /><span>SWE-agent</span></div>
         <div className="detail-hero-grid">

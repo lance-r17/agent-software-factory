@@ -42,6 +42,7 @@ class DiscoveryTests(unittest.TestCase):
         self.researched = self.root / "researched.json"
         self.history = self.root / "history.json"
         self.input = self.root / "input.json"
+        self.resolver_fixture = self.root / "resolver-fixture.json"
         self.write(self.candidates, {"candidates": [{
             "slug": "existing", "name": "Existing", "url": "https://github.com/example/existing",
             "discovered_date": "2026-11-21", "status": "pending",
@@ -63,12 +64,45 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
         return json.loads(result.stdout) if result.stdout.strip().startswith("{") else result.stdout
 
-    def import_input(self, values, *extra):
+    def import_input(self, values, *extra, resolutions=None):
         self.write(self.input, {"candidates": values, "source_errors": [{"source": "openalex", "error": "429"}]})
+        fixture = {"resolutions": {}}
+        for raw in values:
+            if not isinstance(raw, dict) or not raw.get("url"):
+                continue
+            verification = raw.get("verification", {})
+            fixture["resolutions"][raw["url"]] = {
+                "resolved_url": raw["url"],
+                "fork": raw.get("fork", False),
+                "parent_url": raw.get("parent_url"),
+                "source_repo_url": raw.get("source_repo_url"),
+                "archived": verification.get("archived", False),
+                "license": verification.get("license"),
+            }
+            for parent in (raw.get("parent_url"), raw.get("source_repo_url")):
+                if parent:
+                    fixture["resolutions"].setdefault(parent, {
+                        "resolved_url": parent,
+                        "fork": False,
+                        "archived": False,
+                        "license": "MIT",
+                    })
+        if resolutions:
+            fixture["resolutions"].update(resolutions)
+            for record in resolutions.values():
+                for parent in (record.get("parent_url"), record.get("source_repo_url")):
+                    if parent:
+                        fixture["resolutions"].setdefault(parent, {
+                            "resolved_url": parent,
+                            "fork": False,
+                            "archived": False,
+                            "license": record.get("license") or "MIT",
+                        })
+        self.write(self.resolver_fixture, fixture)
         return self.run_script(
             DISCOVER, "--input", self.input, "--candidates", self.candidates,
             "--researched", self.researched, "--history", self.history,
-            "--date", "2026-11-23", *extra,
+            "--date", "2026-11-23", "--resolver-fixture", self.resolver_fixture, *extra,
         )
 
     def test_canonical_url_variants(self):
@@ -160,6 +194,103 @@ class DiscoveryTests(unittest.TestCase):
         result = self.import_input([raw])
         self.assertEqual(result["duplicate_count"], 1)
         self.assertEqual(result["duplicates"][0]["matched_slug"], "orphan")
+
+    def test_redirect_resolves_before_deduping_known_repository(self):
+        researched = json.loads(self.researched.read_text())
+        researched["solutions"].append({"slug": "openhands", "sources": ["https://github.com/OpenHands/OpenHands"]})
+        self.write(self.researched, researched)
+        raw = candidate(
+            name="OpenDevin stale URL",
+            slug="opendevin-old-url",
+            url="https://github.com/OpenDevin/OpenDevin",
+        )
+        result = self.import_input([raw], resolutions={
+            "https://github.com/OpenDevin/OpenDevin": {
+                "resolved_url": "https://github.com/OpenHands/OpenHands",
+                "fork": False,
+                "archived": False,
+                "license": "MIT",
+            },
+        })
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["duplicate_count"], 1)
+        self.assertEqual(result["duplicates"][0]["matched_slug"], "openhands")
+
+    def test_redirect_records_final_url_previous_url_and_resolver(self):
+        raw = candidate(
+            name="RenseiAI agentfactory stale URL",
+            slug="donmai-libraries",
+            url="https://github.com/RenseiAI/agentfactory",
+        )
+        result = self.import_input([raw], "--dry-run", resolutions={
+            "https://github.com/RenseiAI/agentfactory": {
+                "resolved_url": "https://github.com/RenseiAI/donmai-libraries",
+                "fork": False,
+                "archived": False,
+                "license": "MIT",
+            },
+        })
+        self.assertEqual(result["added_count"], 1)
+        item = result["candidates"][0]
+        self.assertEqual(item["canonical_url"], "https://github.com/renseiai/donmai-libraries")
+        self.assertIn("https://github.com/renseiai/agentfactory", item["previous_urls"])
+        self.assertEqual(item["verification"]["resolved_url"], "https://github.com/renseiai/donmai-libraries")
+        self.assertEqual(item["verification"]["url_resolution"], "fixture")
+
+    def test_noassertion_license_is_rejected(self):
+        raw = candidate(name="No Assertion", slug="no-assertion", url="https://github.com/example/no-assertion")
+        raw["verification"]["license"] = "NOASSERTION"
+        result = self.import_input([raw])
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["rejected_count"], 1)
+        self.assertIn("SPDX", result["rejected"][0]["reason"])
+
+    def test_review_conflict_is_rejected(self):
+        raw = candidate(name="Conflicting review", slug="conflicting-review", url="https://github.com/example/conflicting-review")
+        raw["review"]["notes"] = "Rejected: not admitted without a verified open-source license"
+        result = self.import_input([raw])
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["rejected_count"], 1)
+        self.assertIn("conflicts", result["rejected"][0]["reason"])
+
+    def test_resolver_failure_rejects_candidate_and_records_source_error(self):
+        raw = candidate(name="Resolver failure", slug="resolver-failure", url="https://github.com/example/resolver-failure")
+        result = self.import_input([raw], resolutions={
+            "https://github.com/example/resolver-failure": {"error": "simulated resolver outage"},
+        })
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["rejected_count"], 1)
+        self.assertTrue(any(error["source"] == "repository_resolver" for error in result["source_errors"]))
+
+    def test_fork_metadata_from_resolver_defaults_to_parent(self):
+        raw = candidate(name="Resolver fork", slug="resolver-fork", url="https://github.com/someone/metagpt")
+        raw.pop("parent_url", None)
+        result = self.import_input([raw], resolutions={
+            "https://github.com/someone/metagpt": {
+                "resolved_url": "https://github.com/someone/metagpt",
+                "fork": True,
+                "parent_url": "https://github.com/example/recorded",
+                "archived": False,
+                "license": "MIT",
+            },
+        })
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["duplicate_count"], 1)
+        self.assertEqual(result["duplicates"][0]["matched_slug"], "recorded")
+
+    def test_rank_excludes_duplicate_canonical_urls(self):
+        first = candidate(name="First duplicate", slug="first-duplicate", url="https://github.com/example/same")
+        second = candidate(name="Second duplicate", slug="second-duplicate", url="https://github.com/example/same")
+        for item in (first, second):
+            item["status"] = "pending"
+            item["discovered_date"] = "2026-11-23"
+        self.write(self.candidates, {"candidates": [first, second]})
+        result = self.run_script(RANK, "--candidates", self.candidates, "--date", "2026-11-23")
+        self.assertEqual(result["candidates"], [])
+        self.assertEqual(
+            sorted(item["reason"] for item in result["excluded"]),
+            ["duplicate_canonical_url", "duplicate_canonical_url"],
+        )
 
     def test_history_limit_and_no_temp_files(self):
         self.import_input([candidate()], "--history-limit", "1")

@@ -29,6 +29,7 @@ OpenAlex 与 Semantic Scholar 是可选项。2026-11-22 可行性探测分别出
       "name": "Example Agent",
       "url": "https://github.com/example/example-agent",
       "review": {
+        "decision": "approved",
         "approved": true,
         "topic_relevant": true,
         "notes": "Official code and documentation show a distinct Issue-to-patch workflow."
@@ -41,6 +42,7 @@ OpenAlex 与 Semantic Scholar 是可选项。2026-11-22 可行性探测分别出
       "verification": {
         "official_repository_checked": true,
         "license": "MIT",
+        "license_evidence_url": "https://github.com/example/example-agent/blob/main/LICENSE",
         "archived": false,
         "checked_at": "2026-11-23"
       },
@@ -63,7 +65,9 @@ OpenAlex 与 Semantic Scholar 是可选项。2026-11-22 可行性探测分别出
 }
 ```
 
-`review.approved`、`topic_relevant`、官方仓库检查和许可证是必填项。fork 默认归并到 parent/source；只有存在独立演进理由时才提供 `fork_reason`。archived 项目必须提供 `archived_exception`。
+`review.decision=approved`、`review.approved`、`topic_relevant`、官方仓库检查和有效 SPDX 许可证是必填项。`NOASSERTION`、空值、未知许可证和非 allowlist 许可证必须拒绝；notes 明确拒绝但 approved=true 的矛盾输入也必须拒绝。fork 默认归并到 parent/source；只有存在独立演进理由时才提供 `fork_reason`。archived 项目必须提供 `archived_exception`。
+
+导入脚本会在去重前解析 GitHub rename、organization transfer 和 redirect，使用最终官方 URL 作为 `canonical_url`，把原 URL 记录到 `previous_urls` / `redirected_from`，并在 `verification` 中保存 resolver 与检查时间。解析失败时该候选必须拒绝并记录 `repository_resolver` source error；不能因为网页摘要或手工 URL 推断放行。
 
 评分均为 0–5。risk_penalty 越高扣分越多。分数必须来自当前核验证据，不能从 stars 自动推断。
 
@@ -79,7 +83,7 @@ python3 scripts/discover_candidates.py import \
   --dry-run
 ```
 
-`import` 是默认子命令，可以省略。定时任务第一阶段只执行 dry-run。
+`import` 是默认子命令，可以省略。定时任务第一阶段只执行 dry-run。正常运行会在线解析仓库重定向；离线 fixture 测试使用 `--resolver-fixture /tmp/resolver-fixture.json`，不得把 fixture 当作正式来源证据。
 
 正式启用后才省略 `--dry-run` 并增加：
 

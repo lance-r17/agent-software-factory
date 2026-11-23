@@ -11,6 +11,48 @@ from urllib.parse import urlsplit, urlunsplit
 
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SUPPORTED_HOSTS = {"github.com", "www.github.com", "gitee.com", "www.gitee.com"}
+UNKNOWN_LICENSES = {"", "NONE", "NOASSERTION", "UNKNOWN", "UNVERIFIED"}
+SUPPORTED_SPDX_LICENSES = {
+    "0BSD",
+    "AGPL-3.0",
+    "Apache-2.0",
+    "Artistic-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "CC-BY-4.0",
+    "CC-BY-SA-4.0",
+    "CC0-1.0",
+    "CPL-1.0",
+    "ECL-2.0",
+    "EPL-2.0",
+    "EUPL-1.2",
+    "GPL-2.0",
+    "GPL-3.0",
+    "ISC",
+    "LGPL-2.1",
+    "LGPL-3.0",
+    "MIT",
+    "MIT-0",
+    "MPL-2.0",
+    "PostgreSQL",
+    "Python-2.0",
+    "Ruby",
+    "Unlicense",
+    "Zlib",
+}
+
+
+def normalize_spdx_license(value: object) -> str:
+    if not isinstance(value, str):
+        raise ValueError("a verified SPDX license is required")
+    normalized = value.strip()
+    if normalized.upper() in UNKNOWN_LICENSES:
+        raise ValueError("a verified SPDX license is required")
+    for license_id in SUPPORTED_SPDX_LICENSES:
+        if normalized.lower() == license_id.lower():
+            return license_id
+    raise ValueError(f"unsupported or unverified SPDX license: {normalized}")
 
 
 def load_json(path: Path) -> dict:

@@ -8,7 +8,7 @@ from datetime import date as current_date
 import json
 from pathlib import Path
 
-from candidate_utils import load_json, write_json_atomic
+from candidate_utils import load_json, repository_urls, write_json_atomic
 
 WEIGHTS = {
     "relevance": 0.25,
@@ -22,9 +22,30 @@ WEIGHTS = {
 SCORE_FIELDS = tuple(WEIGHTS) + ("risk_penalty",)
 
 
-def evaluate(candidate: dict, ranked_at: str) -> tuple[dict, dict | None]:
+def duplicated_candidate_slugs(candidates: list[dict]) -> set[str]:
+    seen: dict[str, str] = {}
+    duplicated: set[str] = set()
+    for candidate in candidates:
+        slug = candidate.get("slug", "unknown")
+        keys = {slug}
+        keys.update(repository_urls(candidate))
+        for key in keys:
+            if not key:
+                continue
+            matched = seen.get(key)
+            if matched and matched != slug:
+                duplicated.add(matched)
+                duplicated.add(slug)
+            else:
+                seen[key] = slug
+    return duplicated
+
+
+def evaluate(candidate: dict, ranked_at: str, duplicate_slugs: set[str] | None = None) -> tuple[dict, dict | None]:
     slug = candidate.get("slug", "unknown")
     verification = candidate.get("verification", {})
+    if duplicate_slugs and slug in duplicate_slugs:
+        return {"slug": slug, "eligible": False, "reason": "duplicate_canonical_url"}, None
     if candidate.get("status") != "pending":
         return {"slug": slug, "eligible": False, "reason": "status_not_pending"}, None
     if verification.get("official_repository_checked") is not True:
@@ -71,9 +92,10 @@ def main() -> None:
     excluded = []
     updated = dict(data)
     updated_candidates = []
+    duplicate_slugs = duplicated_candidate_slugs(candidates)
     for original in candidates:
         candidate = dict(original)
-        summary, ranking = evaluate(candidate, args.date)
+        summary, ranking = evaluate(candidate, args.date, duplicate_slugs)
         if ranking is None:
             excluded.append(summary)
             if args.write:

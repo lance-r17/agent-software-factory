@@ -2,6 +2,7 @@ import openHandsDeployMarkdown from '../../skills/deploy/zh-CN/openhands-agent-c
 import miniSweAgentDeployMarkdown from '../../skills/deploy/zh-CN/mini-swe-agent-deploy/SKILL.md?raw'
 import sweAgentDeployMarkdown from '../../skills/deploy/zh-CN/swe-agent-deploy/SKILL.md?raw'
 import agentlessDeployMarkdown from '../../skills/deploy/zh-CN/agentless-deploy/SKILL.md?raw'
+import metagptDeployMarkdown from '../../skills/deploy/zh-CN/metagpt-deploy/SKILL.md?raw'
 export type DeploySkill = {
   slug: string
   fileName: string
@@ -136,4 +137,37 @@ export const agentlessDeploySkill: DeploySkill = {
     '10 · 安全红线与来源',
   ],
   content: agentlessDeployMarkdown,
+}
+
+
+export const metagptDeploySkill: DeploySkill = {
+  slug: 'metagpt',
+  fileName: 'metagpt-deploy.md',
+  title: 'MetaGPT 部署 Skill',
+  description: 'SKILL.md 格式的独立部署指令：固定 v0.8.1 与提交，记录 LanceDB / Click 实测兼容组合，内置离线核验、文档先行、隔离完整生成和序列化恢复四条路线，以及密钥边界、验收与故障速查。',
+  version: 'v0.8.1',
+  verifyDate: '2026-11-23',
+  accent: 'pink',
+  routes: [
+    { id: 'A', label: '离线核验' },
+    { id: 'B', label: '文档先行' },
+    { id: 'C', label: '隔离完整生成' },
+    { id: 'D', label: '序列化恢复' },
+  ],
+  outline: [
+    '0 · 版本合同与证据边界',
+    '1 · 硬性前置检查',
+    '2 · 四条部署路线选择表',
+    '3 · 路线 A：固定源码与兼容安装',
+    '4 · 离线配置、核心导入与 CLI 自检',
+    '5 · 真实模型配置',
+    '6 · 路线 B：文档先行',
+    '7 · 路线 C：隔离完整生成与 QA',
+    '8 · 路线 D：序列化恢复',
+    '9 · 外层自动化接入门禁',
+    '10 · 八道验收闸门',
+    '11 · 常见故障速查',
+    '12 · 升级、备份、安全红线与来源',
+  ],
+  content: metagptDeployMarkdown,
 }

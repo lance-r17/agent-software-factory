@@ -14,6 +14,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'metagpt', title: 'MetaGPT', subtitle: '把软件公司的 SOP 落成角色、消息与文件产物',
+    description: 'FoundationAgents 的 MIT 多角色框架：ProductManager、Architect、ProjectManager、Engineer 与可选 QA 通过共享环境和 ProjectRepo 协作。本页固定 v0.8.1，实测依赖漂移、核心导入与 CLI 兼容组合；真实模型生成未执行。',
+    version: 'v0.8.1', license: 'MIT', stars: '角色化 SOP', verifiedAt: '2026-11-23',
+    tags: ['Python 3.11', '多角色 SOP', '消息订阅', 'ProjectRepo'], category: '编程 Agent', tone: 'pink',
+  },
+  {
     slug: 'agentless', title: 'Agentless', subtitle: '不用自由工具循环，把修复拆成定位、生成、验证选择',
     description: 'OpenAutoCoder 的 MIT 研究流水线：层级定位、多样本补丁、回归 / 复现测试与多数投票。适合研究固定流程和 SWE-bench 复现；官方依赖未锁定，本页给出 2026 年实测兼容组合。',
     version: 'v1.5.0', license: 'MIT', stars: '2.1k', verifiedAt: '2026-11-22',
@@ -40,6 +46,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'metagpt', title: 'MetaGPT', subtitle: 'Software-company SOPs expressed as roles, messages, and file artifacts',
+    description: 'FoundationAgents’ MIT-licensed multi-role framework: ProductManager, Architect, ProjectManager, Engineer, and optional QA collaborate through a shared environment and ProjectRepo. This analysis pins v0.8.1 and checks dependency drift, core imports, and CLI compatibility; real model generation was not executed.',
+    version: 'v0.8.1', license: 'MIT', stars: 'Role-based SOP', verifiedAt: '2026-11-23',
+    tags: ['Python 3.11', 'Multi-role SOP', 'Message subscriptions', 'ProjectRepo'], category: '编程 Agent', tone: 'pink',
+  },
   {
     slug: 'agentless', title: 'Agentless', subtitle: 'A fixed pipeline for localization, repair, validation, and selection',
     description: 'OpenAutoCoder’s MIT-licensed research pipeline: hierarchical localization, multi-sample patches, regression / reproduction tests, and majority voting. Useful for studying fixed pipelines and SWE-bench reproduction; its official dependencies are unpinned, so this page records a compatibility combination verified in 2026.',

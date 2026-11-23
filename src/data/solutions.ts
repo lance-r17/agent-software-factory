@@ -10,6 +10,10 @@ export type Solution = {
   tags: string[]
   category: '仓库自治' | '编程 Agent'
   tone: 'pink' | 'green' | 'blue' | 'yellow'
+  lifecycle?: 'active' | 'watch' | 'archived'
+  archivedAt?: string
+  archiveReason?: string
+  successorSlug?: string
 }
 
 export const solutions: Solution[] = [
@@ -30,6 +34,9 @@ export const solutions: Solution[] = [
     description: 'Python ≥ 3.11 的 MIT 研究框架，完整呈现 ACI、工具束、轨迹与批量实验。官方已进入维护模式并推荐 mini-SWE-agent；本页固定 v1.1.0，保留源码复现、Docker / Modal 路线与历史迁移边界。',
     version: 'v1.1.0', license: 'MIT', stars: '遗产研究', verifiedAt: '2026-11-21',
     tags: ['Python ≥ 3.11', 'SWE-ReX', 'ACI', '研究 / 批处理'], category: '编程 Agent', tone: 'yellow',
+    lifecycle: 'archived', archivedAt: '2026-11-24',
+    archiveReason: '官方 README 声明开发重心已转向 mini-SWE-agent（superseded）。',
+    successorSlug: 'mini-swe-agent',
   },
   {
     slug: 'mini-swe-agent', title: 'mini-SWE-agent', subtitle: '用约 100 行核心逻辑，跑通模型到补丁的最小闭环',
@@ -63,6 +70,9 @@ export const solutionsEn: Solution[] = [
     description: 'An MIT-licensed research framework requiring Python 3.11 or later, with a complete ACI, tool bundles, trajectories, and batch experiments. The official project is in maintenance mode and recommends mini-SWE-agent. This analysis pins v1.1.0 and preserves source reproduction, Docker / Modal routes, and migration boundaries.',
     version: 'v1.1.0', license: 'MIT', stars: 'Legacy research', verifiedAt: '2026-11-21',
     tags: ['Python ≥ 3.11', 'SWE-ReX', 'ACI', 'Research / batches'], category: '编程 Agent', tone: 'yellow',
+    lifecycle: 'archived', archivedAt: '2026-11-24',
+    archiveReason: 'The official README states that active development has moved to mini-SWE-agent (superseded).',
+    successorSlug: 'mini-swe-agent',
   },
   {
     slug: 'mini-swe-agent', title: 'mini-SWE-agent', subtitle: 'A minimal model-to-patch loop with roughly 100 lines of core logic',

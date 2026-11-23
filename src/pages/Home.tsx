@@ -1,23 +1,31 @@
 import { useMemo, useState } from 'react'
-import { ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Check, Search, ShieldCheck, X } from 'lucide-react'
+import { Archive, ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Check, Search, ShieldCheck, X } from 'lucide-react'
 import { Link } from 'react-router'
 import { PageShell } from '../components/Layout'
 import { solutions, solutionsEn, type Solution } from '../data/solutions'
 import { homeContent } from '../data/solutionContent/homeContent'
 import type { Locale } from '../locale'
 
+const archiveStrings = {
+  zh: { show: '显示已归档', hide: '隐藏已归档', badge: '已归档', count: '个已归档', toggleAria: '切换显示已归档方案' },
+  en: { show: 'Show archived', hide: 'Hide archived', badge: 'Archived', count: 'archived', toggleAria: 'Toggle archived solutions' },
+}
+
 function SolutionCard({ solution, index, locale }: { solution: Solution; index: number; locale: Locale }) {
   const isEnglish = locale === 'en'
   const c = homeContent[locale]
+  const a = archiveStrings[locale]
+  const archived = solution.lifecycle === 'archived'
   const basePath = `/solutions/${solution.slug}`
   const path = isEnglish ? `/en${basePath}` : basePath
-  return <article className={`solution-card ${solution.tone}`}>
+  return <article className={`solution-card ${solution.tone}${archived ? ' is-archived' : ''}`}>
     <div className="solution-index">{String(index + 1).padStart(2, '0')}</div>
     <div className="solution-main">
-      <div className="solution-meta"><span><ShieldCheck size={14} />{c.card.verified} {solution.verifiedAt}</span><span>{solution.license} License</span></div>
+      <div className="solution-meta"><span><ShieldCheck size={14} />{c.card.verified} {solution.verifiedAt}</span><span>{solution.license} License</span>{archived && <span className="archive-badge"><Archive size={13} />{a.badge} {solution.archivedAt}</span>}</div>
       <h3><Link to={path}>{solution.title}</Link></h3>
       <h4>{solution.subtitle}</h4>
       <p>{solution.description}</p>
+      {archived && solution.archiveReason && <p className="archive-card-reason">{solution.archiveReason}</p>}
       <div className="tag-row">{solution.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
     </div>
     <div className="solution-side">
@@ -31,20 +39,25 @@ function SolutionCard({ solution, index, locale }: { solution: Solution; index: 
 export default function Home({ locale = 'zh' }: { locale?: Locale }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
+  const [showArchived, setShowArchived] = useState(false)
   const isEnglish = locale === 'en'
   const c = homeContent[locale]
+  const a = archiveStrings[locale]
   const homePath = isEnglish ? '/en' : '/'
   const data = isEnglish ? solutionsEn : solutions
+  const archivedCount = useMemo(() => data.filter((solution) => solution.lifecycle === 'archived').length, [data])
+  const activeCount = data.length - archivedCount
   const filters = [
     { id: 'all', label: c.library.filterLabels[0] },
     { id: '仓库自治', label: c.library.filterLabels[1] },
     { id: '编程 Agent', label: c.library.filterLabels[2] },
   ]
   const filtered = useMemo(() => data.filter((solution) => {
+    if (!showArchived && solution.lifecycle === 'archived') return false
     const matchesFilter = filter === 'all' || solution.category === filter
     const haystack = `${solution.title} ${solution.subtitle} ${solution.description} ${solution.tags.join(' ')}`.toLowerCase()
     return matchesFilter && haystack.includes(query.trim().toLowerCase())
-  }), [data, filter, query])
+  }), [data, filter, query, showArchived])
 
   return <PageShell>
     <section className="home-hero page-width">
@@ -75,11 +88,17 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
     </section>
 
     <section className="library-section page-width" id="library">
-      <div className="library-heading"><div><span className="hand-label">{c.library.kicker}</span><h2>{c.library.title}</h2></div><p><strong>{String(data.length).padStart(2, '0')}</strong> {c.library.countLabel}</p></div>
+      <div className="library-heading"><div><span className="hand-label">{c.library.kicker}</span><h2>{c.library.title}</h2></div><p><strong>{String(activeCount).padStart(2, '0')}</strong> {c.library.countLabel}{archivedCount > 0 && <span className="archived-count"> · {archivedCount} {a.count}</span>}</p></div>
       <div className="library-tools">
         <label className="search-box"><Search size={20} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={c.library.searchPlaceholder} aria-label={c.library.searchAria} />{query && <button type="button" onClick={() => setQuery('')} aria-label={c.library.clearAria}><X size={17} /></button>}</label>
         <div className="filter-group" aria-label={c.library.filterAria}>{filters.map((item) => <button type="button" key={item.id} className={filter === item.id ? 'active' : ''} onClick={() => setFilter(item.id)} aria-pressed={item.id === filter}>{item.label}</button>)}</div>
       </div>
+      {archivedCount > 0 && <div className="archive-toggle-row">
+        <button type="button" className={`archive-toggle${showArchived ? ' active' : ''}`} onClick={() => setShowArchived(!showArchived)} aria-pressed={showArchived} aria-label={a.toggleAria}>
+          <Archive size={16} />{showArchived ? a.hide : a.show}（{archivedCount}）
+        </button>
+        <Link className="text-link" to={isEnglish ? '/en/archive' : '/archive'}>{isEnglish ? 'Archive page' : '归档页'} <ArrowUpRight size={14} /></Link>
+      </div>}
       <div className="solution-list">
         {filtered.map((solution) => <SolutionCard key={solution.slug} solution={solution} index={data.indexOf(solution)} locale={locale} />)}
         {filtered.length === 0 && <div className="empty-state"><h3>{c.library.emptyTitle}</h3><p>{c.library.emptyBody}</p><button type="button" onClick={() => { setQuery(''); setFilter('all') }}>{c.library.reset}</button></div>}

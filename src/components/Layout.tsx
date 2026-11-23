@@ -17,16 +17,20 @@ export function ScrollManager() {
   return null
 }
 
-const navItems = {
+type NavItem = { label: string; hash?: string; path?: string }
+
+const navItems: Record<'zh' | 'en', NavItem[]> = {
   zh: [
     { label: '方案库', hash: '#library' },
     { label: '选型方法', hash: '#method' },
     { label: '更新记录', hash: '#changelog' },
+    { label: '归档', path: '/archive' },
   ],
   en: [
     { label: 'Library', hash: '#library' },
     { label: 'Selection method', hash: '#method' },
     { label: 'Changelog', hash: '#changelog' },
+    { label: 'Archive', path: '/archive' },
   ],
 }
 
@@ -37,6 +41,7 @@ const pageTitles: Record<string, { zh: string; en: string }> = {
   '/solutions/swe-agent': { zh: 'SWE-agent · Agent 软件工厂', en: 'SWE-agent · Agent Software Factory' },
   '/solutions/agentless': { zh: 'Agentless · Agent 软件工厂', en: 'Agentless · Agent Software Factory' },
   '/solutions/metagpt': { zh: 'MetaGPT · Agent 软件工厂', en: 'MetaGPT · Agent Software Factory' },
+  '/archive': { zh: '归档方案 · Agent 软件工厂', en: 'Archived solutions · Agent Software Factory' },
 }
 
 export function SiteHeader() {
@@ -69,7 +74,7 @@ export function SiteHeader() {
         </Link>
         <div className="header-actions">
           <nav className="desktop-nav" aria-label={isEnglish ? 'Main navigation' : '主导航'}>
-            {items.map((item) => <Link key={item.hash} to={{ pathname: homePath, hash: item.hash }}>{item.label}</Link>)}
+            {items.map((item) => <Link key={item.label} to={item.path ? { pathname: `${isEnglish ? '/en' : ''}${item.path}` } : { pathname: homePath, hash: item.hash }}>{item.label}</Link>)}
             <a href="https://github.com/FoundationAgents/MetaGPT" target="_blank" rel="noreferrer">{isEnglish ? 'Latest repository' : '本期仓库'} <ArrowUpRight size={15} /></a>
           </nav>
           {languageSwitch}
@@ -79,7 +84,7 @@ export function SiteHeader() {
         </div>
       </div>
       {open && <nav id="mobile-nav" className="mobile-nav" aria-label={isEnglish ? 'Mobile navigation' : '移动端导航'}>
-        {items.map((item) => <Link key={item.hash} to={{ pathname: homePath, hash: item.hash }}>{item.label}</Link>)}
+        {items.map((item) => <Link key={item.label} to={item.path ? { pathname: `${isEnglish ? '/en' : ''}${item.path}` } : { pathname: homePath, hash: item.hash }}>{item.label}</Link>)}
         <a href="https://github.com/FoundationAgents/MetaGPT" target="_blank" rel="noreferrer">{isEnglish ? 'Latest GitHub repository' : '本期 GitHub 仓库'} <ArrowUpRight size={16} /></a>
       </nav>}
     </header>

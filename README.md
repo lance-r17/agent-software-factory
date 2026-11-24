@@ -70,7 +70,7 @@ python3 scripts/discover_candidates.py import \
   --researched /path/to/state/researched.json \
   --dry-run
 python3 scripts/rank_candidates.py --candidates /path/to/state/candidates.json
-(cd scripts && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py)
+(cd scripts && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py test_fast_track.py)
 ```
 
 dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定时任务切换必须在审核通过后显式启用。
@@ -82,7 +82,35 @@ dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定�
 - Issue Form：`.github/ISSUE_TEMPLATE/fast-track.yml`，每个 Issue 只接收一个仓库，可选填写根许可证文件证据和补充说明。
 - 所需标签：`candidate:fast-track` 与 `status:queued`。仓库必须先创建这两个标签，模板才能正确应用它们。
 - 页面只生成提交链接，不把“打开 GitHub”表述为“已提交”或“已入池”。
-- 后续合规审核、标签流转和正式入池由独立自动化任务处理；官方仓库、归档、许可证和去重门槛不因 fast track 而降低。
+- 后续合规审核、标签流转和正式入池由每日定时任务处理；官方仓库、归档、许可证和去重门槛不因 fast track 而降低。
+
+### 自动审查与受控入池
+
+`fast_track.py review` 读取宿主导出的 Issue JSON，只把审查报告和可选 curated JSON 写到 `/tmp`，不写 state：
+
+```bash
+python3 scripts/fast_track.py review \
+  --issue-json /tmp/fast-track-issue.json \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --output /tmp/fast-track-review.json
+```
+
+每日定时任务在当天选题确定后处理 fast track 队列，通过宿主现有 GitHub 工具读取 Issue、更新标签和发布评论，不需要额外注入 `GITHUB_TOKEN`。`PENDING` 仍停止全部运行；当天已有成功记录时只跳过每日研究，不影响 fast track 维护。当天新入池候选从下一次日常选题起参与排名。
+
+符合授权条件时，每日任务调用正式导入；它会重新审查 Issue 和仓库，再执行 dry-run、原子导入与排名写入：
+
+```bash
+python3 scripts/fast_track.py import \
+  --issue-json /tmp/fast-track-issue.json \
+  --review /tmp/fast-track-review.json \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --history /path/to/state/discovery-history.json \
+  --output /tmp/fast-track-import.json
+```
+
+修正黄灯 Issue 后，将其重新设置为 `status:queued`；不要通过评论文字授予导入权限。`NOASSERTION` 等未知许可证始终转入人工文件核验，不能由每日任务自动放行。机器评分只使用仓库、README、发布与维护证据，不使用 stars。
 
 ## 已收录方案
 

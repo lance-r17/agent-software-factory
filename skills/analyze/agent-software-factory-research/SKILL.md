@@ -73,6 +73,19 @@ python3 scripts/select_candidate.py \
 
 ranked 模式只在通过硬门槛且有 ranking 元数据的候选中按总分选题；没有合格候选时返回 `empty`，不会悄悄退回旧顺序。`status=stop` 时结束当天任务；`status=empty` 时报告候选池为空；只有 `status=selected` 才继续。搜索并复用同 slug 的 Issue/PR，不重复创建。
 
+### Fast Track 日常维护（当天选题确定后）
+
+fast track 是候选池维护，不占每日方案名额。`PENDING` 仍停止全部运行；`SKIP` 只跳过每日研究，仍应处理 fast track 队列。先完成当天选题，再处理队列，确保当天新入池候选不会改变已经确定的方案。
+
+1. 用宿主 GitHub Issue 工具读取开放队列：`candidate:fast-track + status:queued`，以及 `candidate:fast-track + status:approved + approval:maintainer`。不要使用评论文字作为授权。
+2. 将每个 Issue 的完整 JSON 导出到 `/tmp/fast-track-issue-<number>.json`。待审 Issue 先设置 `status:reviewing`，再运行 `fast_track.py review`；报告与 curated JSON 只写 `/tmp`。
+3. 按报告更新标签并发布审查评论。黄灯补证后由维护者重新设置为 `status:queued`；红灯和重复项不得入池。
+4. 受信作者的绿灯可继续导入。外部作者必须同时保留 `status:approved` 和维护者添加的 `approval:maintainer`。
+5. 重新导出带有最新标签的 Issue，运行 `fast_track.py import`。脚本会复核正文 SHA-256、仓库证据和 dry-run，再执行原子导入、history 和 ranking 写入。
+6. 只有返回 `decision=imported` 且状态哈希核验通过后，才设置 `status:imported` 并发布结果评论。失败不得标记成功；单个黄灯或红灯不阻断当天已选方案的研究。
+
+宿主使用既有 GitHub 工具完成 Issue 操作，不需要为 fast track 额外注入 `GITHUB_TOKEN`。不修改 `.github/workflows/`，不启用独立轮询 worker。
+
 ### 3. 研究并固定证据边界
 
 读取 `references/research-workflow.md`，确定官方仓库、精确版本或提交、许可证、架构、工作流、数据契约、部署命令、风险和维护信号。先完成官方一手资料研究，再在隔离环境做与实际范围匹配的核验。
@@ -107,6 +120,7 @@ python3 scripts/validate_repository.py --repo-root /path/to/repository
 - `references/page-authoring.md`：现有 React/HashRouter 页面的双语实现与 Skill 注册合同。
 - `references/acceptance.md`：构建、浏览器、快照、安全和 PR 验收清单。
 - `scripts/discover_candidates.py`：审核后候选的规范化、去重、原子导入和 dry-run。
+- `scripts/fast_track.py`：fast track Issue 的唯一 URL 解析、机器审查、证据评分、正文版本核验和每日任务受控导入。
 - `scripts/rank_candidates.py`：硬门槛、可解释评分和稳定排序。
 - `scripts/select_candidate.py`：确定性防重和候选选择；只读，不写 state。
 - `scripts/validate_repository.py`：校验 Skill 包、资源引用和网页 raw import 注册表；需要 Python 3 与 PyYAML。

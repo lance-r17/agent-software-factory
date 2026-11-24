@@ -83,6 +83,11 @@ def _resolution_from_fixture(canonical: str, record: Mapping[str, Any]) -> dict[
         "source_repo_url": record.get("source_repo_url"),
         "archived": record.get("archived"),
         "license": record.get("license"),
+        "name": record.get("name"),
+        "description": record.get("description") or "",
+        "default_branch": record.get("default_branch") or "main",
+        "pushed_at": record.get("pushed_at"),
+        "language": record.get("language"),
         "resolver": record.get("resolver") or "fixture",
         "warnings": list(record.get("warnings", [])),
     }
@@ -162,6 +167,11 @@ def resolve_repository_url(
             "source_repo_url": source.get("html_url"),
             "archived": payload.get("archived"),
             "license": license_info.get("spdx_id"),
+            "name": payload.get("name"),
+            "description": payload.get("description") or "",
+            "default_branch": payload.get("default_branch") or "main",
+            "pushed_at": payload.get("pushed_at"),
+            "language": payload.get("language"),
             "resolver": "github_api",
             "warnings": [],
         }

@@ -93,6 +93,14 @@ python3 scripts/discover_candidates.py import \
 
 dry-run 对 candidates 和 history 零写入。正式导入使用原子替换，重复候选不会重复追加；历史默认最多保留 30 次运行。每次正式导入后记录 candidates、researched 与 history 的 SHA-256，变更范围不得超过 candidates 与 history。
 
+### Fast Track Issue 输入
+
+Pages 或 Issue Form 提交的 fast track Issue 由 `fast_track.py review` 解析。仓库 URL 必须位于唯一的 `### 仓库 URL` 章节，且只能是 GitHub 仓库根地址；缺失、重复章节、多个值、凭据、子页面和其他托管域不得放行。审查报告记录 Issue 编号、URL、正文 SHA-256、证据和评分依据。
+
+绿灯只表示机器审查通过。受信作者可进入自动导入；外部作者必须另有 `approval:maintainer`。`NOASSERTION`、fork、元数据不完整和证据采集失败均转入人工补证，明确不支持的许可证或归档仓库直接拒绝。机器评分使用 README、release、维护时间和能力证据，不使用 stars。
+
+`fast_track.py import` 或 worker 正式处理前必须重新审查，核对正文哈希和候选结果未变化，再运行同一输入的 dry-run。重复候选保持幂等；正式导入后核验 researched 不变，并保留 candidates、history 的前后 SHA-256。报告和临时文件放 `/tmp`，GitHub Token 只由宿主环境注入 worker，不进入报告或 state。
+
 ## 5. 评分与选择
 
 ```bash

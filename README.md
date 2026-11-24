@@ -70,7 +70,7 @@ python3 scripts/discover_candidates.py import \
   --researched /path/to/state/researched.json \
   --dry-run
 python3 scripts/rank_candidates.py --candidates /path/to/state/candidates.json
-(cd scripts && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py)
+(cd scripts && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_candidate_discovery.py test_fast_track.py)
 ```
 
 dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定时任务切换必须在审核通过后显式启用。
@@ -83,6 +83,30 @@ dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定�
 - 所需标签：`candidate:fast-track` 与 `status:queued`。仓库必须先创建这两个标签，模板才能正确应用它们。
 - 页面只生成提交链接，不把“打开 GitHub”表述为“已提交”或“已入池”。
 - 后续合规审核、标签流转和正式入池由独立自动化任务处理；官方仓库、归档、许可证和去重门槛不因 fast track 而降低。
+
+### 自动审查与受控入池
+
+`fast_track.py review` 读取宿主导出的 Issue JSON，只把审查报告和可选 curated JSON 写到 `/tmp`，不写 state：
+
+```bash
+python3 scripts/fast_track.py review \
+  --issue-json /tmp/fast-track-issue.json \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --output /tmp/fast-track-review.json
+```
+
+`fast_track_worker.py` 负责轮询 `status:queued`，以及带有 `approval:maintainer` 的已批准外部提交。它通过宿主环境注入的短期 `GITHUB_TOKEN` 更新标签和评论；令牌不写进文件、Git、YAML 或 state。正式导入前会重新审查 Issue 和仓库，再执行 dry-run、原子导入与排名写入：
+
+```bash
+python3 scripts/fast_track_worker.py \
+  --candidates /path/to/state/candidates.json \
+  --researched /path/to/state/researched.json \
+  --history /path/to/state/discovery-history.json \
+  --output /tmp/fast-track-worker-result.json
+```
+
+宿主可每 5 分钟调用一次 worker。修正黄灯 Issue 后，将其重新设置为 `status:queued`；不要通过评论文字授予导入权限。`NOASSERTION` 等未知许可证始终转入人工文件核验，不能由 worker 自动放行。机器评分只使用仓库、README、发布与维护证据，不使用 stars。
 
 ## 已收录方案
 

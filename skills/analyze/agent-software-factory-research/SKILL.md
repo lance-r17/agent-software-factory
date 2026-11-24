@@ -107,6 +107,8 @@ python3 scripts/validate_repository.py --repo-root /path/to/repository
 - `references/page-authoring.md`：现有 React/HashRouter 页面的双语实现与 Skill 注册合同。
 - `references/acceptance.md`：构建、浏览器、快照、安全和 PR 验收清单。
 - `scripts/discover_candidates.py`：审核后候选的规范化、去重、原子导入和 dry-run。
+- `scripts/fast_track.py`：fast track Issue 的唯一 URL 解析、机器审查、证据评分、正文版本核验和受控导入。
+- `scripts/fast_track_worker.py`：由宿主定时调用的 Issue 轮询、标签评论和授权导入闭环；令牌只从宿主环境读取。
 - `scripts/rank_candidates.py`：硬门槛、可解释评分和稳定排序。
 - `scripts/select_candidate.py`：确定性防重和候选选择；只读，不写 state。
 - `scripts/validate_repository.py`：校验 Skill 包、资源引用和网页 raw import 注册表；需要 Python 3 与 PyYAML。

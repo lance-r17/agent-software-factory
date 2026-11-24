@@ -104,7 +104,7 @@ fast track 是候选池维护，不占每日方案名额。`PENDING` 仍停止�
 python3 scripts/validate_repository.py --repo-root /path/to/repository
 ```
 
-再按 `references/acceptance.md` 执行 Skill 格式校验、生产构建、中英文桌面和 375px 真浏览器验收、真实复制与下载、静态版本和逐文件 SHA-256 快照。
+再按 `references/acceptance.md` 执行 Skill 格式校验、生产构建、中英文桌面和 375px 浏览器验收、真实复制与下载、静态版本和逐文件 SHA-256 快照。
 
 ### 6. 交接与记录
 

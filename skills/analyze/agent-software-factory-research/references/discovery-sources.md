@@ -101,6 +101,8 @@ Pages 或 Issue Form 提交的 fast track Issue 由 `fast_track.py review` 解�
 
 每日任务在当天选题确定后处理 fast track 队列，避免新候选改变当天选题。`fast_track.py import` 正式处理前必须重新审查，核对正文哈希和候选结果未变化，再运行同一输入的 dry-run。重复候选保持幂等；正式导入后核验 researched 不变，并保留 candidates、history 的前后 SHA-256。报告和临时文件放 `/tmp`；Issue 读取、标签和评论由宿主既有 GitHub 工具执行，不需要额外 Token。
 
+registry 切换后，本地 state 只是缓存。每天先运行 `registry_sync.py verify`，变更完成后运行 `export` 并创建 registry PR；不得以本地旧值直接覆盖 registry。机器故障后从 registry 执行 `rebuild`，恢复后的 candidates、researched 与 history 必须逐字段一致。Projects 只用于展示，不是唯一事实来源。
+
 ## 5. 评分与选择
 
 ```bash

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Archive, ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Check, Search, ShieldCheck, X } from 'lucide-react'
 import { Link } from 'react-router'
 import { PageShell } from '../components/Layout'
+import CandidateSubmission from '../components/CandidateSubmission'
 import { solutions, solutionsEn, type Solution } from '../data/solutions'
 import { homeContent } from '../data/solutionContent/homeContent'
 import type { Locale } from '../locale'
@@ -68,6 +69,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
         <div className="hero-actions">
           <Link className="primary-link" to={{ pathname: homePath, hash: '#library' }}>{c.hero.browse} <ArrowDown size={18} /></Link>
           <Link className="text-link" to={isEnglish ? '/en/solutions/swe-af' : '/solutions/swe-af'}>{c.hero.latest} <ArrowRight size={17} /></Link>
+          <Link className="text-link" to={{ pathname: homePath, hash: '#submit' }}>{isEnglish ? 'Submit a candidate' : '推荐开源项目'} <ArrowUpRight size={16} /></Link>
         </div>
       </div>
       <div className="hero-sketch" role="img" aria-label={c.hero.sketchAria}>
@@ -104,6 +106,8 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
         {filtered.length === 0 && <div className="empty-state"><h3>{c.library.emptyTitle}</h3><p>{c.library.emptyBody}</p><button type="button" onClick={() => { setQuery(''); setFilter('all') }}>{c.library.reset}</button></div>}
       </div>
     </section>
+
+    <CandidateSubmission locale={locale} />
 
     <section className="method-section" id="method">
       <div className="method-grid page-width">

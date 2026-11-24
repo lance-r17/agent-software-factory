@@ -75,6 +75,15 @@ python3 scripts/rank_candidates.py --candidates /path/to/state/candidates.json
 
 dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定时任务切换必须在审核通过后显式启用。
 
+## Fast Track 候选提交
+
+首页 `#submit` 提供中英文仓库 URL 提交入口。页面只规范化 GitHub 仓库根地址，然后打开预填 `fast-track.yml` 的新 Issue；用户仍需登录 GitHub 并确认创建 Issue。Pages 不保存 URL、不包含后端或 GitHub Token，也不直接修改候选池状态。
+
+- Issue Form：`.github/ISSUE_TEMPLATE/fast-track.yml`，每个 Issue 只接收一个仓库，可选填写根许可证文件证据和补充说明。
+- 所需标签：`candidate:fast-track` 与 `status:queued`。仓库必须先创建这两个标签，模板才能正确应用它们。
+- 页面只生成提交链接，不把“打开 GitHub”表述为“已提交”或“已入池”。
+- 后续合规审核、标签流转和正式入池由独立自动化任务处理；官方仓库、归档、许可证和去重门槛不因 fast track 而降低。
+
 ## 已收录方案
 
 | 方案 | 版本 | 中文路由 | 英文路由 | 核验日期 |

@@ -4,7 +4,7 @@
 
 We research and document one open-source Agent Software Factory solution every day. These are tools that use Agent systems to automate software development. Each solution receives a complete analysis with architecture diagrams, deployment instructions, and verification records. Every new solution is delivered in both Chinese and English.
 
-- **Public site (GitHub Pages)**: https://lance-r17.github.io/agent-software-factory/
+- **Public site (GitHub Pages)**: https://lance-r17.github.io/agent-software-factory/#/en
 - **Stack**: React + TypeScript + Vite + Tailwind, with a static HashRouter site built by `npm ci && npm run build` into `dist/`.
 - **Localized routes**: Chinese uses `/` and `/solutions/<slug>`; English uses `/en` and `/en/solutions/<slug>`. Their public Hash URLs are `#/`, `#/solutions/<slug>`, `#/en`, and `#/en/solutions/<slug>`.
 - **Language switching**: The EN / ZH control in the header preserves the current solution and in-page anchor. Navigation, body content, diagrams, tabs, deployment guides, modal dialogs, and copy/download feedback all follow the active language.

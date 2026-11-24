@@ -47,30 +47,6 @@ def pages_body(repository: str = REPOSITORY) -> str:
 由 GitHub Pages Fast Track 入口生成。"""
 
 
-class FakeIssueClient:
-    def __init__(self, issue):
-        self.issues = {issue["number"]: copy.deepcopy(issue)}
-        self.comments = []
-
-    def list_issues(self, required_labels):
-        result = []
-        for issue in self.issues.values():
-            labels = {label["name"] for label in issue["labels"]}
-            if set(required_labels).issubset(labels):
-                result.append(copy.deepcopy(issue))
-        return result
-
-    def get_issue(self, number):
-        return copy.deepcopy(self.issues[number])
-
-    def update_labels(self, number, labels):
-        self.issues[number]["labels"] = [{"name": label} for label in labels]
-        return self.get_issue(number)
-
-    def comment(self, number, body):
-        self.comments.append({"number": number, "body": body})
-
-
 class FastTrackTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="fast-track-test-")
@@ -270,51 +246,6 @@ class FastTrackTests(unittest.TestCase):
         ]
         result = self.import_issue(external, review)
         self.assertEqual(result["decision"], "imported")
-
-
-    def run_worker(self, client):
-        from fast_track_worker import run_worker
-        return run_worker(
-            client,
-            candidates_path=self.candidates_path,
-            researched_path=self.researched_path,
-            history_path=self.history_path,
-            work_dir=self.root / "worker",
-            resolver_fixture_path=self.resolver_fixture_path,
-            evidence_fixture_path=self.evidence_fixture_path,
-            today="2026-11-24",
-            trusted_authors={"lance-r17"},
-        )
-
-    def test_worker_processes_trusted_issue_and_stops_after_import(self):
-        client = FakeIssueClient(self.issue)
-        result = self.run_worker(client)
-        self.assertEqual(result["processed_count"], 1)
-        self.assertEqual(result["results"][0]["decision"], "imported")
-        labels = {label["name"] for label in client.issues[101]["labels"]}
-        self.assertIn("status:imported", labels)
-        self.assertEqual(len(client.comments), 1)
-        before = sha256_file(self.candidates_path)
-        second = self.run_worker(client)
-        self.assertEqual(second["processed_count"], 0)
-        self.assertEqual(sha256_file(self.candidates_path), before)
-
-    def test_worker_waits_for_external_approval_then_imports_when_labeled(self):
-        external = copy.deepcopy(self.issue)
-        external["user"] = {"login": "external-user"}
-        external["author_association"] = "NONE"
-        client = FakeIssueClient(external)
-        first = self.run_worker(client)
-        self.assertEqual(first["results"][0]["decision"], "approved")
-        self.assertFalse(first["results"][0]["imported"])
-        self.assertEqual(json.loads(self.candidates_path.read_text())["candidates"], [])
-        labels = {label["name"] for label in client.issues[101]["labels"]}
-        self.assertIn("status:approved", labels)
-
-        client.issues[101]["labels"].append({"name": "approval:maintainer"})
-        second = self.run_worker(client)
-        self.assertEqual(second["results"][0]["decision"], "imported")
-        self.assertEqual(json.loads(self.candidates_path.read_text())["candidates"][0]["slug"], "loopforge")
 
 
 if __name__ == "__main__":

@@ -82,7 +82,7 @@ dry-run 不写候选或发现历史。正式入池、`--strategy ranked` 和定�
 - Issue Form：`.github/ISSUE_TEMPLATE/fast-track.yml`，每个 Issue 只接收一个仓库，可选填写根许可证文件证据和补充说明。
 - 所需标签：`candidate:fast-track` 与 `status:queued`。仓库必须先创建这两个标签，模板才能正确应用它们。
 - 页面只生成提交链接，不把“打开 GitHub”表述为“已提交”或“已入池”。
-- 后续合规审核、标签流转和正式入池由独立自动化任务处理；官方仓库、归档、许可证和去重门槛不因 fast track 而降低。
+- 后续合规审核、标签流转和正式入池由每日定时任务处理；官方仓库、归档、许可证和去重门槛不因 fast track 而降低。
 
 ### 自动审查与受控入池
 
@@ -96,17 +96,21 @@ python3 scripts/fast_track.py review \
   --output /tmp/fast-track-review.json
 ```
 
-`fast_track_worker.py` 负责轮询 `status:queued`，以及带有 `approval:maintainer` 的已批准外部提交。它通过宿主环境注入的短期 `GITHUB_TOKEN` 更新标签和评论；令牌不写进文件、Git、YAML 或 state。正式导入前会重新审查 Issue 和仓库，再执行 dry-run、原子导入与排名写入：
+每日定时任务在当天选题确定后处理 fast track 队列，通过宿主现有 GitHub 工具读取 Issue、更新标签和发布评论，不需要额外注入 `GITHUB_TOKEN`。`PENDING` 仍停止全部运行；当天已有成功记录时只跳过每日研究，不影响 fast track 维护。当天新入池候选从下一次日常选题起参与排名。
+
+符合授权条件时，每日任务调用正式导入；它会重新审查 Issue 和仓库，再执行 dry-run、原子导入与排名写入：
 
 ```bash
-python3 scripts/fast_track_worker.py \
+python3 scripts/fast_track.py import \
+  --issue-json /tmp/fast-track-issue.json \
+  --review /tmp/fast-track-review.json \
   --candidates /path/to/state/candidates.json \
   --researched /path/to/state/researched.json \
   --history /path/to/state/discovery-history.json \
-  --output /tmp/fast-track-worker-result.json
+  --output /tmp/fast-track-import.json
 ```
 
-宿主可每 5 分钟调用一次 worker。修正黄灯 Issue 后，将其重新设置为 `status:queued`；不要通过评论文字授予导入权限。`NOASSERTION` 等未知许可证始终转入人工文件核验，不能由 worker 自动放行。机器评分只使用仓库、README、发布与维护证据，不使用 stars。
+修正黄灯 Issue 后，将其重新设置为 `status:queued`；不要通过评论文字授予导入权限。`NOASSERTION` 等未知许可证始终转入人工文件核验，不能由每日任务自动放行。机器评分只使用仓库、README、发布与维护证据，不使用 stars。
 
 ## 已收录方案
 

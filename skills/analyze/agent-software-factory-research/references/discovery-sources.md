@@ -99,7 +99,7 @@ Pages 或 Issue Form 提交的 fast track Issue 由 `fast_track.py review` 解�
 
 绿灯只表示机器审查通过。受信作者可进入自动导入；外部作者必须另有 `approval:maintainer`。`NOASSERTION`、fork、元数据不完整和证据采集失败均转入人工补证，明确不支持的许可证或归档仓库直接拒绝。机器评分使用 README、release、维护时间和能力证据，不使用 stars。
 
-`fast_track.py import` 或 worker 正式处理前必须重新审查，核对正文哈希和候选结果未变化，再运行同一输入的 dry-run。重复候选保持幂等；正式导入后核验 researched 不变，并保留 candidates、history 的前后 SHA-256。报告和临时文件放 `/tmp`，GitHub Token 只由宿主环境注入 worker，不进入报告或 state。
+每日任务在当天选题确定后处理 fast track 队列，避免新候选改变当天选题。`fast_track.py import` 正式处理前必须重新审查，核对正文哈希和候选结果未变化，再运行同一输入的 dry-run。重复候选保持幂等；正式导入后核验 researched 不变，并保留 candidates、history 的前后 SHA-256。报告和临时文件放 `/tmp`；Issue 读取、标签和评论由宿主既有 GitHub 工具执行，不需要额外 Token。
 
 ## 5. 评分与选择
 

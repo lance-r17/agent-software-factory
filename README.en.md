@@ -114,6 +114,31 @@ python3 scripts/fast_track.py import \
 
 After correcting a yellow-flagged Issue, return it to `status:queued`. Never grant import permission through comment text. Unknown licenses such as `NOASSERTION` always require manual license-file review and cannot be admitted automatically by the daily task. Machine scores use repository, README, release, and maintenance evidence, never stars.
 
+## GitHub Registry and Resilient Visualization
+
+The public [`agent-software-factory-registry`](https://github.com/lance-r17/agent-software-factory-registry) stores candidates, researched solutions, and discovery history. Each candidate has an independent `candidates/<slug>.json` file, while `candidates/index.json` preserves the original order. Candidate Issues in the main repository provide readable records, and GitHub Projects is only a visualization layer. The candidate pool is not published on GitHub Pages.
+
+The daily task compares the registry with the local cache at startup. After cutover, the registry is authoritative and local `state/` is only a rebuildable cache. Cache changes are exported and delivered through registry PRs rather than direct background pushes to `main`. No paid services are required.
+
+```bash
+# Compare only; do not write state
+python3 scripts/registry_sync.py verify \
+  --registry-dir /tmp/agent-software-factory-registry \
+  --state-dir /path/to/state
+
+# Rebuild the cache from the registry after a machine failure
+python3 scripts/registry_sync.py rebuild \
+  --registry-dir /tmp/agent-software-factory-registry \
+  --state-dir /path/to/state
+
+# Export local changes to the registry worktree, then create a registry PR
+python3 scripts/registry_sync.py export \
+  --registry-dir /tmp/agent-software-factory-registry \
+  --state-dir /path/to/state
+```
+
+`verify` writes nothing, `rebuild` verifies the result after writing, and `export` leaves local state unchanged. Candidate counts, ordering, scores, research records, and history must match field by field; comparing only the display table is insufficient.
+
 ## Indexed Solutions
 
 | Solution | Version | Chinese route | English route | Verified |

@@ -114,6 +114,31 @@ python3 scripts/fast_track.py import \
 
 修正黄灯 Issue 后，将其重新设置为 `status:queued`；不要通过评论文字授予导入权限。`NOASSERTION` 等未知许可证始终转入人工文件核验，不能由每日任务自动放行。机器评分只使用仓库、README、发布与维护证据，不使用 stars。
 
+## GitHub Registry 与容灾可视化
+
+公开的 [`agent-software-factory-registry`](https://github.com/lance-r17/agent-software-factory-registry) 保存候选、已研究记录和发现历史。每个候选在 `candidates/<slug>.json` 中独立保存，`candidates/index.json` 固定原始顺序，主仓库候选 Issue 提供可读记录，GitHub Projects 只作为可视化层。GitHub Pages 不展示候选池。
+
+每日任务启动时校验 registry 与本地缓存；正式切换后 registry 是权威数据，本地 `state/` 只是可重建缓存。缓存变更通过导出和 registry PR 交接，未合并的变更仍保留在 PR 中，不需要后台直接推 main，也不引入付费服务。
+
+```bash
+# 只比较，不写 state
+python3 scripts/registry_sync.py verify \
+  --registry-dir /tmp/agent-software-factory-registry \
+  --state-dir /path/to/state
+
+# 机器故障后从 registry 重建缓存
+python3 scripts/registry_sync.py rebuild \
+  --registry-dir /tmp/agent-software-factory-registry \
+  --state-dir /path/to/state
+
+# 将本地变更导出到 registry 工作区，随后创建 registry PR
+python3 scripts/registry_sync.py export \
+  --registry-dir /tmp/agent-software-factory-registry \
+  --state-dir /path/to/state
+```
+
+`verify` 不写任何文件；`rebuild` 在写入后再次核验；`export` 不改本地 state。候选数量、顺序、评分、研究和历史记录必须逐字段一致，不能只比较展示表格。
+
 ## 已收录方案
 
 | 方案 | 版本 | 中文路由 | 英文路由 | 核验日期 |

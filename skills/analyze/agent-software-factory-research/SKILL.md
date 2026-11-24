@@ -86,6 +86,12 @@ fast track 是候选池维护，不占每日方案名额。`PENDING` 仍停止�
 
 宿主使用既有 GitHub 工具完成 Issue 操作，不需要为 fast track 额外注入 `GITHUB_TOKEN`。不修改 `.github/workflows/`，不启用独立轮询 worker。
 
+### Registry 容灾同步
+
+公开 registry 保存权威候选、研究和发现历史，本地 state 是可重建缓存。每日运行先执行 `registry_sync.py verify`；不一致时停止并审查差异，按已批准的切换规则执行 `rebuild`，不能静默以本地旧值覆盖 registry。
+
+任何 candidates、researched 或 discovery-history 变更完成后，运行 `registry_sync.py export` 并创建 registry PR。PR 未合并前不得声称 registry 已更新，也不得让后续运行覆盖该变更。机器故障后从 registry 执行 `rebuild`，逐文件比较恢复结果。Projects 只展示数据，不能代替 registry 或候选 Issue 正文。
+
 ### 3. 研究并固定证据边界
 
 读取 `references/research-workflow.md`，确定官方仓库、精确版本或提交、许可证、架构、工作流、数据契约、部署命令、风险和维护信号。先完成官方一手资料研究，再在隔离环境做与实际范围匹配的核验。
@@ -121,6 +127,7 @@ python3 scripts/validate_repository.py --repo-root /path/to/repository
 - `references/acceptance.md`：构建、浏览器、快照、安全和 PR 验收清单。
 - `scripts/discover_candidates.py`：审核后候选的规范化、去重、原子导入和 dry-run。
 - `scripts/fast_track.py`：fast track Issue 的唯一 URL 解析、机器审查、证据评分、正文版本核验和每日任务受控导入。
+- `scripts/registry_sync.py`：registry 与本地缓存的只读校验、故障恢复重建和变更导出。
 - `scripts/rank_candidates.py`：硬门槛、可解释评分和稳定排序。
 - `scripts/select_candidate.py`：确定性防重和候选选择；只读，不写 state。
 - `scripts/validate_repository.py`：校验 Skill 包、资源引用和网页 raw import 注册表；需要 Python 3 与 PyYAML。

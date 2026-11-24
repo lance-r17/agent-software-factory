@@ -7,9 +7,11 @@ import argparse
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from candidate_utils import (
     SLUG_PATTERN,
+    UNKNOWN_LICENSES,
     canonicalize_repo_url,
     known_index,
     load_json,
@@ -33,6 +35,26 @@ REVIEW_REJECTION_PREFIXES = (
     "拒绝:",
     "不收录",
 )
+LICENSE_EVIDENCE_FILENAMES = {"LICENSE", "LICENSE.MD", "LICENSE.TXT", "COPYING"}
+LICENSE_EVIDENCE_HOSTS = {"github.com", "www.github.com", "gitee.com", "www.gitee.com"}
+
+
+def _metadata_license(value: object) -> str | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    normalized = value.strip()
+    if normalized.upper() in UNKNOWN_LICENSES:
+        return None
+    return normalize_spdx_license(normalized)
+
+
+def _has_license_file_evidence(value: object) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return False
+    parsed = urlsplit(value.strip())
+    host = (parsed.hostname or "").lower()
+    filename = parsed.path.rstrip("/").rsplit("/", 1)[-1].upper()
+    return host in LICENSE_EVIDENCE_HOSTS and filename in LICENSE_EVIDENCE_FILENAMES
 
 
 def _validated_review(review: dict) -> None:
@@ -46,10 +68,8 @@ def _validated_review(review: dict) -> None:
         raise ValueError("review decision conflicts with rejection notes")
 
 
-def _validated_license(review_value: object, resolver_value: object) -> tuple[str, str]:
-    resolver_license = None
-    if isinstance(resolver_value, str) and resolver_value.strip():
-        resolver_license = normalize_spdx_license(resolver_value)
+def _validated_license(review_value: object, resolver_value: object, evidence_url: object) -> tuple[str, str]:
+    resolver_license = _metadata_license(resolver_value)
     review_license = None
     if isinstance(review_value, str) and review_value.strip():
         review_license = normalize_spdx_license(review_value)
@@ -58,7 +78,9 @@ def _validated_license(review_value: object, resolver_value: object) -> tuple[st
     if resolver_license:
         return resolver_license, "repository_metadata"
     if review_license:
-        return review_license, "review"
+        if not _has_license_file_evidence(evidence_url):
+            raise ValueError("repository metadata license is unknown; a license_evidence_url for a root license file is required")
+        return review_license, "license_file_review"
     raise ValueError("a verified SPDX license is required")
 
 
@@ -89,7 +111,11 @@ def reviewed_candidate(raw: dict, date: str, resolver=resolve_repository_url) ->
 
     canonical, resolution, parent_resolution = _resolved_candidate_url(raw, resolver)
     final_resolution = parent_resolution or resolution
-    license_name, license_source = _validated_license(verification.get("license"), final_resolution.get("license"))
+    license_name, license_source = _validated_license(
+        verification.get("license"),
+        final_resolution.get("license"),
+        verification.get("license_evidence_url"),
+    )
     archived = verification.get("archived") is True or final_resolution.get("archived") is True
     archived_exception = verification.get("archived_exception")
     if archived and (not isinstance(archived_exception, str) or not archived_exception.strip()):
@@ -122,6 +148,7 @@ def reviewed_candidate(raw: dict, date: str, resolver=resolve_repository_url) ->
     for item in (resolution, parent_resolution):
         if item:
             warnings.extend(item.get("warnings", []))
+    license_evidence_url = verification.get("license_evidence_url")
     verification_result = {
         "official_repository_checked": True,
         "license": license_name,
@@ -131,6 +158,7 @@ def reviewed_candidate(raw: dict, date: str, resolver=resolve_repository_url) ->
         "resolved_url": canonical,
         "url_resolution": final_resolution.get("resolver"),
         "repository_checked_at": date,
+        **({"license_evidence_url": license_evidence_url.strip()} if isinstance(license_evidence_url, str) and license_evidence_url.strip() else {}),
         **({"redirected_from": redirected_from} if redirected_from else {}),
         **({"url_resolution_warnings": warnings} if warnings else {}),
         **({"archived_exception": archived_exception} if archived else {}),

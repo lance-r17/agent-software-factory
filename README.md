@@ -139,6 +139,12 @@ python3 scripts/registry_sync.py export \
 
 `verify` 不写任何文件；`rebuild` 在写入后再次核验；`export` 不改本地 state。候选数量、顺序、评分、研究和历史记录必须逐字段一致，不能只比较展示表格。
 
+### Issue 生命周期
+
+Fast Track 的 duplicate 和 rejected 在评论证据后可分别作为 duplicate、not planned 关闭；imported 必须等 registry PR 合并后才能作为 completed 关闭。Candidate Issue 在入池、选题和研究中保持 open，研究发布并同步后作为 completed 关闭；duplicate、rejected、archived 或 legacy ineligible 可按证据关闭。
+
+关闭 Issue 不删除 registry 数据，也不改变 Projects 字段。活动视图只显示 open 工作项，History 视图保留已关闭记录。`candidate_lifecycle.py` 根据候选和已研究状态输出 action、state_reason 与关闭前置条件，宿主必须按这些条件执行，不能提前关闭。
+
 ## 已收录方案
 
 | 方案 | 版本 | 中文路由 | 英文路由 | 核验日期 |

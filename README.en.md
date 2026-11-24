@@ -139,6 +139,12 @@ python3 scripts/registry_sync.py export \
 
 `verify` writes nothing, `rebuild` verifies the result after writing, and `export` leaves local state unchanged. Candidate counts, ordering, scores, research records, and history must match field by field; comparing only the display table is insufficient.
 
+### Issue Lifecycle
+
+Fast Track duplicate and rejected Issues may close as duplicate and not planned after their evidence comments. An imported Fast Track Issue may close as completed only after the registry PR merges. Candidate Issues remain open through import, selection, and research. They close as completed after research is published and synchronized, or close as duplicate, not planned, or archived when supported by evidence.
+
+Closing an Issue never deletes registry data or changes Project fields. Active views show only open work items, while the History view retains closed records. `candidate_lifecycle.py` returns the action, state_reason, and closing precondition from candidate and researched state. The host must honor these conditions rather than closing early.
+
 ## Indexed Solutions
 
 | Solution | Version | Chinese route | English route | Verified |

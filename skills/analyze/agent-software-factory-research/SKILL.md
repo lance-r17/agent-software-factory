@@ -92,6 +92,12 @@ fast track 是候选池维护，不占每日方案名额。`PENDING` 仍停止�
 
 任何 candidates、researched 或 discovery-history 变更完成后，运行 `registry_sync.py export` 并创建 registry PR。PR 未合并前不得声称 registry 已更新，也不得让后续运行覆盖该变更。机器故障后从 registry 执行 `rebuild`，逐文件比较恢复结果。Projects 只展示数据，不能代替 registry 或候选 Issue 正文。
 
+### Issue 生命周期闭环
+
+按 fast track 报告的 `issue_action` 执行：duplicate 和 rejected 在评论后可关闭；imported 必须等 registry PR 合并后才能作为 completed 关闭。Candidate Issue 用 `candidate_lifecycle.py` 判断：pending 和研究中保持 open，研究发布并同步后关闭为 completed，duplicate、rejected、archived 或 legacy ineligible 按证据关闭。
+
+关闭 Issue 不修改 registry 或 Projects 字段。活动视图只显示 open 工作项，History 保存关闭记录。不得把“已入池”误作 Candidate Issue 的关闭条件，也不得在 registry PR 合并前关闭 Fast Track。
+
 ### 3. 研究并固定证据边界
 
 读取 `references/research-workflow.md`，确定官方仓库、精确版本或提交、许可证、架构、工作流、数据契约、部署命令、风险和维护信号。先完成官方一手资料研究，再在隔离环境做与实际范围匹配的核验。
@@ -126,6 +132,7 @@ python3 scripts/validate_repository.py --repo-root /path/to/repository
 - `references/page-authoring.md`：现有 React/HashRouter 页面的双语实现与 Skill 注册合同。
 - `references/acceptance.md`：构建、浏览器、快照、安全和 PR 验收清单。
 - `scripts/discover_candidates.py`：审核后候选的规范化、去重、原子导入和 dry-run。
+- `scripts/candidate_lifecycle.py`：根据候选与研究状态生成安全的 Issue 关闭动作和前置条件。
 - `scripts/fast_track.py`：fast track Issue 的唯一 URL 解析、机器审查、证据评分、正文版本核验和每日任务受控导入。
 - `scripts/registry_sync.py`：registry 与本地缓存的只读校验、故障恢复重建和变更导出。
 - `scripts/rank_candidates.py`：硬门槛、可解释评分和稳定排序。

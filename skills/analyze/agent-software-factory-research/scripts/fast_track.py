@@ -374,6 +374,13 @@ def _finalize(report: dict[str, Any], decision: str, reasons: list[str], *, lice
         report["import_eligible"] = bool(
             report["issue"]["trusted_submission"] or "approval:maintainer" in issue_labels_from_names(report["labels"])
         )
+    report["issue_action"] = {
+        "duplicate": {"action": "close", "state_reason": "duplicate", "after": "comment"},
+        "rejected": {"action": "close", "state_reason": "not_planned", "after": "comment"},
+        "imported": {"action": "close", "state_reason": "completed", "after": "registry_pr_merged"},
+    }.get(decision, {"action": "open", "state_reason": None, "after": None})
+    if decision == "duplicate" and report.get("duplicate_match", {}).get("slug"):
+        report["issue_action"]["duplicate_of_candidate_slug"] = report["duplicate_match"]["slug"]
     report["comment"] = render_review_comment(report)
     return report
 
@@ -405,7 +412,13 @@ def render_review_comment(report: Mapping[str, Any]) -> str:
             lines.append(f"- `{field}`：{value}")
     if report["decision"] == "approved":
         lines.extend(["", "符合受信自动导入条件。" if report.get("import_eligible") else "等待维护者添加 `approval:maintainer` 后才能导入。"])
-    lines.extend(["", "提交或机器审查通过不等于已入池；正式导入前会重新校验 Issue 正文和仓库状态。"])
+    issue_action = report.get("issue_action", {})
+    if issue_action.get("after") == "comment":
+        lines.extend(["", f"处理已完成，可作为 {issue_action['state_reason']} 关闭；registry 数据不受影响。"])
+    elif issue_action.get("after") == "registry_pr_merged":
+        lines.extend(["", "registry PR 合并后，本 Fast Track Issue 可作为 completed 关闭；Candidate Issue 继续保持 open。"])
+    else:
+        lines.extend(["", "提交或机器审查通过不等于已入池；正式导入前会重新校验 Issue 正文和仓库状态。"])
     return "\n".join(lines)
 
 

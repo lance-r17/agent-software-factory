@@ -65,7 +65,7 @@ OpenAlex 与 Semantic Scholar 是可选项。2026-11-22 可行性探测分别出
 }
 ```
 
-`review.decision=approved`、`review.approved`、`topic_relevant`、官方仓库检查和有效 SPDX 许可证是必填项。`NOASSERTION`、空值、未知许可证和非 allowlist 许可证必须拒绝；notes 明确拒绝但 approved=true 的矛盾输入也必须拒绝。fork 默认归并到 parent/source；只有存在独立演进理由时才提供 `fork_reason`。archived 项目必须提供 `archived_exception`。
+`review.decision=approved`、`review.approved`、`topic_relevant`、官方仓库检查和有效 SPDX 许可证是必填项。仓库元数据返回明确但不受支持的许可证时必须拒绝；元数据与 review 冲突时必须拒绝。仅当元数据为 `NOASSERTION`、空值或未知占位符，且 Agent 已人工核验根目录许可证文件并提供 `verification.license_evidence_url` 时，才允许使用 review 中的 SPDX 许可证并将 `license_source` 记为 `license_file_review`；没有该证据 URL 的未知许可证仍必须拒绝。fork 默认归并到 parent/source；只有存在独立演进理由时才提供 `fork_reason`。archived 项目必须提供 `archived_exception`。
 
 导入脚本会在去重前解析 GitHub rename、organization transfer 和 redirect，使用最终官方 URL 作为 `canonical_url`，把原 URL 记录到 `previous_urls` / `redirected_from`，并在 `verification` 中保存 resolver 与检查时间。解析失败时该候选必须拒绝并记录 `repository_resolver` source error；不能因为网页摘要或手工 URL 推断放行。
 

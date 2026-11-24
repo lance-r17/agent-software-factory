@@ -245,6 +245,67 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(result["rejected_count"], 1)
         self.assertIn("SPDX", result["rejected"][0]["reason"])
 
+    def test_noassertion_metadata_accepts_reviewed_license_file_evidence(self):
+        raw = candidate(name="LoopForge", slug="loopforge", url="https://github.com/tencent/loopforge")
+        raw["verification"]["license_evidence_url"] = "https://github.com/Tencent/LoopForge/blob/main/LICENSE"
+        result = self.import_input([raw], resolutions={
+            "https://github.com/tencent/loopforge": {
+                "resolved_url": "https://github.com/tencent/loopforge",
+                "fork": False,
+                "archived": False,
+                "license": "NOASSERTION",
+            },
+        })
+        self.assertEqual(result["added_count"], 1)
+        item = result["candidates"][0]
+        self.assertEqual(item["verification"]["license"], "MIT")
+        self.assertEqual(item["verification"]["license_source"], "license_file_review")
+        self.assertEqual(item["verification"]["license_evidence_url"], raw["verification"]["license_evidence_url"])
+
+    def test_noassertion_metadata_requires_license_file_evidence(self):
+        raw = candidate(name="Missing evidence", slug="missing-evidence", url="https://github.com/example/missing-evidence")
+        result = self.import_input([raw], resolutions={
+            "https://github.com/example/missing-evidence": {
+                "resolved_url": "https://github.com/example/missing-evidence",
+                "fork": False,
+                "archived": False,
+                "license": "NOASSERTION",
+            },
+        })
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["rejected_count"], 1)
+        self.assertIn("license_evidence_url", result["rejected"][0]["reason"])
+
+    def test_unsupported_metadata_license_does_not_fallback_to_review(self):
+        raw = candidate(name="Unsupported license", slug="unsupported-license", url="https://github.com/example/unsupported-license")
+        raw["verification"]["license_evidence_url"] = "https://github.com/example/unsupported-license/blob/main/LICENSE"
+        result = self.import_input([raw], resolutions={
+            "https://github.com/example/unsupported-license": {
+                "resolved_url": "https://github.com/example/unsupported-license",
+                "fork": False,
+                "archived": False,
+                "license": "FSL-1.1-MIT",
+            },
+        })
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["rejected_count"], 1)
+        self.assertIn("unsupported or unverified SPDX license", result["rejected"][0]["reason"])
+
+    def test_known_metadata_license_conflict_is_rejected(self):
+        raw = candidate(name="License conflict", slug="license-conflict", url="https://github.com/example/license-conflict")
+        raw["verification"]["license_evidence_url"] = "https://github.com/example/license-conflict/blob/main/LICENSE"
+        result = self.import_input([raw], resolutions={
+            "https://github.com/example/license-conflict": {
+                "resolved_url": "https://github.com/example/license-conflict",
+                "fork": False,
+                "archived": False,
+                "license": "Apache-2.0",
+            },
+        })
+        self.assertEqual(result["added_count"], 0)
+        self.assertEqual(result["rejected_count"], 1)
+        self.assertIn("license mismatch", result["rejected"][0]["reason"])
+
     def test_review_conflict_is_rejected(self):
         raw = candidate(name="Conflicting review", slug="conflicting-review", url="https://github.com/example/conflicting-review")
         raw["review"]["notes"] = "Rejected: not admitted without a verified open-source license"

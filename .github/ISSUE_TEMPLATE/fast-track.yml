@@ -1,0 +1,41 @@
+name: Fast Track 候选项目
+description: 提交公开仓库，由系统自动执行候选池合规预检
+title: "[Fast Track] "
+labels:
+  - "candidate:fast-track"
+  - "status:queued"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        每个 Issue 只提交一个仓库。
+        许可证、评分和审核结论由系统生成，无需手工填写。
+        自动审核不会放宽现有候选池合规要求。
+        请勿在 Issue 中填写令牌、私钥或其他敏感信息。
+
+  - type: input
+    id: repository
+    attributes:
+      label: 仓库 URL
+      description: 请填写官方公开仓库主页，不要填写分支、PR、下载页或镜像地址。
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+
+  - type: input
+    id: license_evidence
+    attributes:
+      label: 许可证文件证据（可选）
+      description: 仅当仓库许可证元数据未知时，填写根 LICENSE、LICENSE.md、LICENSE.txt 或 COPYING 文件 URL。填写后仍需人工核验。
+      placeholder: https://github.com/owner/repository/blob/main/LICENSE
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 补充说明（可选）
+      description: 可说明项目与 Agent 软件工厂的关系、官方仓库判断依据或其他审核线索。
+      placeholder: 该项目提供多角色协作、交付流水线和人工审批节点……
+    validations:
+      required: false

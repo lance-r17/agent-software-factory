@@ -32,8 +32,21 @@ export function buildFastTrackIssueUrl(repositoryUrl: string): string | null {
   if (!repository) return null
 
   const issueUrl = new URL(ISSUE_URL)
-  issueUrl.searchParams.set('template', 'fast-track.yml')
+  const body = [
+    '### 仓库 URL',
+    repository,
+    '',
+    '### 许可证文件证据（可选）',
+    '无',
+    '',
+    '### 补充说明（可选）',
+    '无',
+    '',
+    '---',
+    '由 GitHub Pages Fast Track 入口生成。提交不代表入池，仍需完成官方仓库、归档状态、许可证与重复候选检查。',
+  ].join('\n')
   issueUrl.searchParams.set('title', `[Fast Track] ${repository.split('/').slice(-2).join('/')}`)
-  issueUrl.searchParams.set('repository', repository)
+  issueUrl.searchParams.set('body', body)
+  issueUrl.searchParams.set('labels', 'candidate:fast-track,status:queued')
   return issueUrl.toString()
 }

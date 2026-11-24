@@ -3,6 +3,7 @@ import miniSweAgentDeployMarkdownEn from '../../skills/deploy/en/mini-swe-agent-
 import sweAgentDeployMarkdownEn from '../../skills/deploy/en/swe-agent-legacy-deploy/SKILL.md?raw'
 import agentlessDeployMarkdownEn from '../../skills/deploy/en/agentless-deploy/SKILL.md?raw'
 import metagptDeployMarkdownEn from '../../skills/deploy/en/metagpt-deploy/SKILL.md?raw'
+import sweAfDeployMarkdownEn from '../../skills/deploy/en/swe-af-deploy/SKILL.md?raw'
 import type { DeploySkill } from './deploySkills'
 
 export const openHandsDeploySkillEn: DeploySkill = {
@@ -55,4 +56,15 @@ export const metagptDeploySkillEn: DeploySkill = {
   routes: [{ id: 'A', label: 'Offline verification' }, { id: 'B', label: 'Documentation first' }, { id: 'C', label: 'Isolated full generation' }, { id: 'D', label: 'Serialized recovery' }],
   outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: fixed source and compatibility installation', '04 Offline configuration, imports, and CLI checks', '05 Real model configuration', '06 Route B: documentation first', '07 Route C: isolated full generation and QA', '08 Route D: serialized recovery', '09 Outer automation gates', '10 Eight acceptance gates', '11 Troubleshooting', '12 Upgrades, backups, security red lines, and sources'],
   content: metagptDeployMarkdownEn,
+}
+
+
+export const sweAfDeploySkillEn: DeploySkill = {
+  slug: 'swe-af',
+  title: 'SWE-AF deployment manual',
+  description: 'An independent SKILL.md instruction set pinning main@0de5364, recording 2,641 tested Python checks and the untested Go boundary, with offline verification, Python Compose, Go node, and single-Issue delegation routes plus secret, callback, budget, recovery, and human-merge gates.',
+  version: 'SWE-AF main@0de5364', verifyDate: '2026-11-24', fileName: 'swe-af-deploy-en.md', accent: 'green',
+  routes: [{ id: 'A', label: 'Offline Python verification' }, { id: 'B', label: 'Python Compose' }, { id: 'C', label: 'Go node' }, { id: 'D', label: 'Single-Issue delegation' }],
+  outline: ['00 Version contract and evidence boundary', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: offline Python verification', '04 Route B: Python Compose full stack', '05 Route C: Go node', '06 Route D: single-Issue delegation', '07 Recovery, state, and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
+  content: sweAfDeployMarkdownEn,
 }

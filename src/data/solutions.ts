@@ -19,6 +19,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'swe-af', title: 'SWE-AF', subtitle: '用 Issue DAG、三层控制环和 checkpoint 驱动自治工程队',
+    description: 'AgentField 上的 Apache-2.0 软件工厂节点：目标经 PRD、架构和 Issue DAG 进入 worktree 并行编码、评审、QA、合并与验证。固定 main@0de5364；Python 2,641 项测试通过，真实模型与 Go 未执行。',
+    version: 'main@0de5364', license: 'Apache-2.0', stars: '自治工程队', verifiedAt: '2026-11-24',
+    tags: ['Python 3.12', 'Issue DAG', '三层控制环', 'checkpoint'], category: '仓库自治', tone: 'green',
+  },
+  {
     slug: 'metagpt', title: 'MetaGPT', subtitle: '把软件公司的 SOP 落成角色、消息与文件产物',
     description: 'FoundationAgents 的 MIT 多角色框架：ProductManager、Architect、ProjectManager、Engineer 与可选 QA 通过共享环境和 ProjectRepo 协作。本页固定 v0.8.1，实测依赖漂移、核心导入与 CLI 兼容组合；真实模型生成未执行。',
     version: 'v0.8.1', license: 'MIT', stars: '角色化 SOP', verifiedAt: '2026-11-23',
@@ -55,6 +61,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'swe-af', title: 'SWE-AF', subtitle: 'An autonomous engineering team driven by an Issue DAG, three control loops, and checkpoints',
+    description: 'An Apache-2.0 software-factory node on AgentField: goals become PRDs, architecture, and an Issue DAG, then parallel worktree coding, review, QA, merge, and verification. Pins main@0de5364; 2,641 Python tests passed, while real models and Go were not executed.',
+    version: 'main@0de5364', license: 'Apache-2.0', stars: 'Autonomous team', verifiedAt: '2026-11-24',
+    tags: ['Python 3.12', 'Issue DAG', 'Three control loops', 'Checkpoints'], category: '仓库自治', tone: 'green',
+  },
   {
     slug: 'metagpt', title: 'MetaGPT', subtitle: 'Software-company SOPs expressed as roles, messages, and file artifacts',
     description: 'FoundationAgents’ MIT-licensed multi-role framework: ProductManager, Architect, ProjectManager, Engineer, and optional QA collaborate through a shared environment and ProjectRepo. This analysis pins v0.8.1 and checks dependency drift, core imports, and CLI compatibility; real model generation was not executed.',

@@ -3,6 +3,7 @@ import miniSweAgentDeployMarkdown from '../../skills/deploy/zh-CN/mini-swe-agent
 import sweAgentDeployMarkdown from '../../skills/deploy/zh-CN/swe-agent-deploy/SKILL.md?raw'
 import agentlessDeployMarkdown from '../../skills/deploy/zh-CN/agentless-deploy/SKILL.md?raw'
 import metagptDeployMarkdown from '../../skills/deploy/zh-CN/metagpt-deploy/SKILL.md?raw'
+import sweAfDeployMarkdown from '../../skills/deploy/zh-CN/swe-af-deploy/SKILL.md?raw'
 export type DeploySkill = {
   slug: string
   fileName: string
@@ -170,4 +171,36 @@ export const metagptDeploySkill: DeploySkill = {
     '12 · 升级、备份、安全红线与来源',
   ],
   content: metagptDeployMarkdown,
+}
+
+
+export const sweAfDeploySkill: DeploySkill = {
+  slug: 'swe-af',
+  fileName: 'swe-af-deploy.md',
+  title: 'SWE-AF 部署 Skill',
+  description: 'SKILL.md 格式的独立部署指令：固定 main@0de5364，记录 2,641 项 Python 实测与 Go 未测边界，内置离线核验、Python Compose、Go 节点和单 Issue 委托四条路线，以及密钥、回调、预算、恢复与人工 merge 门禁。',
+  version: 'main@0de5364',
+  verifyDate: '2026-11-24',
+  accent: 'green',
+  routes: [
+    { id: 'A', label: 'Python 离线核验' },
+    { id: 'B', label: 'Python Compose' },
+    { id: 'C', label: 'Go 节点' },
+    { id: 'D', label: '单 Issue 委托' },
+  ],
+  outline: [
+    '0 · 版本合同与证据边界',
+    '1 · 硬性前置检查',
+    '2 · 四条部署路线选择表',
+    '3 · 路线 A：Python 离线核验',
+    '4 · 路线 B：Python Compose 全栈',
+    '5 · 路线 C：Go 节点',
+    '6 · 路线 D：单 Issue 委托',
+    '7 · 恢复、状态与自动化门禁',
+    '8 · 八道验收闸门',
+    '9 · 常见故障速查',
+    '10 · 升级、备份与安全红线',
+    '11 · 官方来源',
+  ],
+  content: sweAfDeployMarkdown,
 }

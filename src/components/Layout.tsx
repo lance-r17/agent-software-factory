@@ -41,6 +41,7 @@ const pageTitles: Record<string, { zh: string; en: string }> = {
   '/solutions/swe-agent': { zh: 'SWE-agent · Agent 软件工厂', en: 'SWE-agent · Agent Software Factory' },
   '/solutions/agentless': { zh: 'Agentless · Agent 软件工厂', en: 'Agentless · Agent Software Factory' },
   '/solutions/metagpt': { zh: 'MetaGPT · Agent 软件工厂', en: 'MetaGPT · Agent Software Factory' },
+  '/solutions/swe-af': { zh: 'SWE-AF · Agent 软件工厂', en: 'SWE-AF · Agent Software Factory' },
   '/archive': { zh: '归档方案 · Agent 软件工厂', en: 'Archived solutions · Agent Software Factory' },
 }
 
@@ -75,7 +76,7 @@ export function SiteHeader() {
         <div className="header-actions">
           <nav className="desktop-nav" aria-label={isEnglish ? 'Main navigation' : '主导航'}>
             {items.map((item) => <Link key={item.label} to={item.path ? { pathname: `${isEnglish ? '/en' : ''}${item.path}` } : { pathname: homePath, hash: item.hash }}>{item.label}</Link>)}
-            <a href="https://github.com/FoundationAgents/MetaGPT" target="_blank" rel="noreferrer">{isEnglish ? 'Latest repository' : '本期仓库'} <ArrowUpRight size={15} /></a>
+            <a href="https://github.com/Agent-Field/SWE-AF" target="_blank" rel="noreferrer">{isEnglish ? 'Latest repository' : '本期仓库'} <ArrowUpRight size={15} /></a>
           </nav>
           {languageSwitch}
           <button className="menu-button" type="button" aria-label={isEnglish ? (open ? 'Close navigation menu' : 'Open navigation menu') : (open ? '关闭导航菜单' : '打开导航菜单')} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
@@ -85,7 +86,7 @@ export function SiteHeader() {
       </div>
       {open && <nav id="mobile-nav" className="mobile-nav" aria-label={isEnglish ? 'Mobile navigation' : '移动端导航'}>
         {items.map((item) => <Link key={item.label} to={item.path ? { pathname: `${isEnglish ? '/en' : ''}${item.path}` } : { pathname: homePath, hash: item.hash }}>{item.label}</Link>)}
-        <a href="https://github.com/FoundationAgents/MetaGPT" target="_blank" rel="noreferrer">{isEnglish ? 'Latest GitHub repository' : '本期 GitHub 仓库'} <ArrowUpRight size={16} /></a>
+        <a href="https://github.com/Agent-Field/SWE-AF" target="_blank" rel="noreferrer">{isEnglish ? 'Latest GitHub repository' : '本期 GitHub 仓库'} <ArrowUpRight size={16} /></a>
       </nav>}
     </header>
   )

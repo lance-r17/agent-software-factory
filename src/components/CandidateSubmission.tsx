@@ -46,7 +46,7 @@ export default function CandidateSubmission({ locale }: { locale: Locale }) {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const issueUrl = buildFastTrackIssueUrl(repository)
+    const issueUrl = buildFastTrackIssueUrl(repository, locale)
     if (!issueUrl) {
       setError(c.error)
       setHandoffUrl('')

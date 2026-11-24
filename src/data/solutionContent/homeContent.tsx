@@ -21,7 +21,7 @@ const zh = {
     kicker: 'DAILY OPEN-SOURCE FIELD NOTES · 2026',
     title: <>把“用 Agent<br />写软件的工厂”<span className="whitespace-nowrap">拆成</span><br /><span className="circled">可复现的图纸</span></>,
     body: '每天只选一个开源方案，从官方资料拆解它的架构、运行链路、本地部署与安全边界。少一点功能罗列，多一点真正跑得通的证据。',
-    browse: '浏览方案库', latest: '最新：SWE-AF main@0de5364', sketchAria: '从需求、规划、编码、测试到人工验收交付的 Agent 软件工厂流程示意图', sketchTitle: '一座 Agent 工厂的纸面模型',
+    browse: '浏览方案库', latest: '最新：Omnigent v0.23.0', sketchAria: '从需求、规划、编码、测试到人工验收交付的 Agent 软件工厂流程示意图', sketchTitle: '一座 Agent 工厂的纸面模型',
     nodes: ['需求与仓库上下文', '任务规划与角色编排', '沙箱执行与自主修正', '测试、评审与人工验收'], sketchFooter: '交付的是可运行代码，不是一段聊天记录。',
   },
   library: {
@@ -37,6 +37,7 @@ const zh = {
   },
   changelog: {
     kicker: '03 · CHANGELOG', title: '调研更新记录', entries: [
+      { date: '2026-11-25', tone: 'blue', title: '收录 Omnigent v0.23.0', body: '多 harness 控制层、Agent YAML、策略与沙箱边界、Polly 并行 worktree 和跨供应商评审；官方 wheel、双 CLI 与 Polly 严格规格解析通过，真实模型与 PR 未执行。' },
       { date: '2026-11-24', tone: 'green', title: '收录 SWE-AF main@0de5364', body: 'AgentField 工程节点、Issue DAG、worktree 并行、三层失败控制、技术债与 checkpoint；Python 隔离实测 2,641 项测试通过，真实模型与 Go 未执行。' },
       { date: '2026-11-23', tone: 'pink', title: '收录 MetaGPT v0.8.1', body: '角色化 SOP、Team / Environment / ProjectRepo 分工、文档先行与隔离生成路线；实测固定源码的依赖漂移、核心导入和 CLI 兼容组合。' },
       { date: '2026-11-22', tone: 'blue', title: '收录 Agentless v1.5.0', body: '层级定位、多样本修复、验证选择与 JSONL 证据链；已实测源码安装和依赖兼容组合，并记录 SWE-bench 未锁定依赖漂移。' },
@@ -54,7 +55,7 @@ const en = {
     kicker: 'DAILY OPEN-SOURCE FIELD NOTES · 2026',
     title: <>Make “factories that<br />write software with Agents”<br /><span className="circled">reproducible.</span></>,
     body: 'Every day, we select one open-source solution and use official sources to map its architecture, runtime workflow, local deployment, and security boundaries. Less feature-listing, more evidence you can run.',
-    browse: 'Browse the library', latest: 'Latest: SWE-AF main@0de5364', sketchAria: 'An Agent software factory pipeline from a requirement through planning, coding, and testing to a human-reviewed delivery', sketchTitle: 'An Agent factory, on paper',
+    browse: 'Browse the library', latest: 'Latest: Omnigent v0.23.0', sketchAria: 'An Agent software factory pipeline from a requirement through planning, coding, and testing to a human-reviewed delivery', sketchTitle: 'An Agent factory, on paper',
     nodes: ['Requirement & repository context', 'Task planning & role orchestration', 'Sandboxed implementation & self-review', 'Tests, review & human acceptance'], sketchFooter: 'Working software, not a chat log.',
   },
   library: {
@@ -70,6 +71,7 @@ const en = {
   },
   changelog: {
     kicker: '03 · CHANGELOG', title: 'Research log', entries: [
+      { date: '2026-11-25', tone: 'blue', title: 'Omnigent v0.23.0 added', body: 'Multi-harness control, Agent YAML, policy and sandbox boundaries, Polly parallel worktrees, and cross-vendor review; official wheel, both CLIs, and strict Polly spec parsing passed, while real models and PRs were not executed.' },
       { date: '2026-11-24', tone: 'green', title: 'SWE-AF main@0de5364 added', body: 'AgentField engineering nodes, Issue DAG, worktree parallelism, three-tier failure control, technical debt, and checkpoints; 2,641 isolated Python tests passed, while real models and Go were not executed.' },
       { date: '2026-11-23', tone: 'pink', title: 'MetaGPT v0.8.1 added', body: 'Role-based SOPs, Team / Environment / ProjectRepo responsibilities, documentation-first and isolated-generation routes; fixed-source dependency drift, core imports, and CLI compatibility were checked.' },
       { date: '2026-11-22', tone: 'blue', title: 'Agentless v1.5.0 added', body: 'Three-phase localization, repair, validation and selection; source installation plus dependency compatibility were checked, and the unpinned SWE-bench drift is documented.' },

@@ -4,6 +4,7 @@ import sweAgentDeployMarkdown from '../../skills/deploy/zh-CN/swe-agent-deploy/S
 import agentlessDeployMarkdown from '../../skills/deploy/zh-CN/agentless-deploy/SKILL.md?raw'
 import metagptDeployMarkdown from '../../skills/deploy/zh-CN/metagpt-deploy/SKILL.md?raw'
 import sweAfDeployMarkdown from '../../skills/deploy/zh-CN/swe-af-deploy/SKILL.md?raw'
+import omnigentDeployMarkdown from '../../skills/deploy/zh-CN/omnigent-deploy/SKILL.md?raw'
 export type DeploySkill = {
   slug: string
   fileName: string
@@ -203,4 +204,36 @@ export const sweAfDeploySkill: DeploySkill = {
     '11 · 官方来源',
   ],
   content: sweAfDeployMarkdown,
+}
+
+
+export const omnigentDeploySkill: DeploySkill = {
+  slug: 'omnigent',
+  fileName: 'omnigent-deploy.md',
+  title: 'Omnigent 部署 Skill',
+  description: 'SKILL.md 格式的独立部署指令：固定 v0.23.0 与提交，记录官方 wheel、CLI 和 Polly 规格的 B 级实测，内置离线、本地控制层、Docker 服务和 Polly 并行工程四条路线，以及 Agent 契约、密钥、沙箱、评审与人工 merge 门禁。',
+  version: 'v0.23.0',
+  verifyDate: '2026-11-25',
+  accent: 'blue',
+  routes: [
+    { id: 'A', label: '离线包与规格核验' },
+    { id: 'B', label: '本地控制层' },
+    { id: 'C', label: 'Docker + Postgres' },
+    { id: 'D', label: 'Polly 并行工程' },
+  ],
+  outline: [
+    '0 · 版本合同与证据边界',
+    '1 · 硬性前置检查',
+    '2 · 四条部署路线选择表',
+    '3 · 路线 A：固定版本离线核验',
+    '4 · 路线 B：本地控制层',
+    '5 · 路线 C：Docker 服务',
+    '6 · 路线 D：Polly 并行工程示例',
+    '7 · Agent 契约与自动化门禁',
+    '8 · 八道验收闸门',
+    '9 · 常见故障速查',
+    '10 · 升级、备份与安全红线',
+    '11 · 官方来源',
+  ],
+  content: omnigentDeployMarkdown,
 }

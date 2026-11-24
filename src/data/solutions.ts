@@ -19,6 +19,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'omnigent', title: 'Omnigent', subtitle: '把异构编码 Agent 纳入同一控制、协作与策略层',
+    description: 'Apache-2.0 多 Agent 元 harness：统一 CLI / Web UI、服务与执行宿主，Agent YAML 声明子 Agent 和策略；Polly 示例以并行 worktree、固定 diff 和跨供应商评审交付 PR。固定 v0.23.0；仅实测安装、CLI 与规格解析。',
+    version: 'v0.23.0', license: 'Apache-2.0', stars: '多 Agent 控制层', verifiedAt: '2026-11-25',
+    tags: ['Python 3.12+', '多 harness', '策略门禁', 'Polly worktree'], category: '仓库自治', tone: 'blue',
+  },
+  {
     slug: 'swe-af', title: 'SWE-AF', subtitle: '用 Issue DAG、三层控制环和 checkpoint 驱动自治工程队',
     description: 'AgentField 上的 Apache-2.0 软件工厂节点：目标经 PRD、架构和 Issue DAG 进入 worktree 并行编码、评审、QA、合并与验证。固定 main@0de5364；Python 2,641 项测试通过，真实模型与 Go 未执行。',
     version: 'main@0de5364', license: 'Apache-2.0', stars: '自治工程队', verifiedAt: '2026-11-24',
@@ -61,6 +67,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'omnigent', title: 'Omnigent', subtitle: 'One control, collaboration, and policy layer for heterogeneous coding Agents',
+    description: 'An Apache-2.0 multi-Agent meta-harness with shared CLI / Web UI, server, and execution hosts. Agent YAML declares sub-agents and policies, while Polly demonstrates parallel worktrees, pinned diffs, and cross-vendor review before PR delivery. Pins v0.23.0; only installation, CLI, and spec parsing were tested.',
+    version: 'v0.23.0', license: 'Apache-2.0', stars: 'Multi-Agent control', verifiedAt: '2026-11-25',
+    tags: ['Python 3.12+', 'Multi-harness', 'Policy gates', 'Polly worktrees'], category: '仓库自治', tone: 'blue',
+  },
   {
     slug: 'swe-af', title: 'SWE-AF', subtitle: 'An autonomous engineering team driven by an Issue DAG, three control loops, and checkpoints',
     description: 'An Apache-2.0 software-factory node on AgentField: goals become PRDs, architecture, and an Issue DAG, then parallel worktree coding, review, QA, merge, and verification. Pins main@0de5364; 2,641 Python tests passed, while real models and Go were not executed.',

@@ -158,7 +158,7 @@ def parse_issue_repository(issue: Mapping[str, Any]) -> tuple[str, str | None]:
         raise IssueInputError("issue_body_missing")
     repository_section = _issue_section(body, {"仓库 URL", "Repository URL", "GitHub 仓库 URL", "GitHub repository URL"})
     repository = parse_github_root_url(_single_response(repository_section))
-    evidence_section = _issue_section(body, {"许可证文件证据（可选）", "许可证文件证据", "License evidence"})
+    evidence_section = _issue_section(body, {"许可证文件证据（可选）", "许可证文件证据", "License evidence", "License file evidence (optional)", "License file evidence"})
     evidence_value = evidence_section.strip() if evidence_section else ""
     evidence_url = None if evidence_value.lower() in {"", "无", "n/a", "_no response_"} else evidence_value
     return repository, evidence_url

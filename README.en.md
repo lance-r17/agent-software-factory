@@ -79,7 +79,7 @@ A dry-run does not write candidates or discovery history. Formal import, `--stra
 
 ## Fast Track Candidate Submission
 
-The home page provides bilingual repository URL submission at `#submit`. It normalizes a GitHub repository root URL and opens a new Issue with the title, body, and labels prefilled through query parameters. It does not depend on the Issue Form already being present on `main`. Users must still sign in to GitHub and confirm Issue creation. GitHub Pages stores no URLs, contains no backend or GitHub Token, and does not modify candidate state directly.
+The home page provides bilingual repository URL submission at `#submit`. It normalizes a GitHub repository root URL and opens a new Issue with the title, body, and labels prefilled through query parameters. It does not depend on the Issue Form already being present on `main`. The Issue body follows the language of the current page. Users must still sign in to GitHub and confirm Issue creation. GitHub Pages stores no URLs, contains no backend or GitHub Token, and does not modify candidate state directly.
 
 - Issue Form: `.github/ISSUE_TEMPLATE/fast-track.yml`. Each Issue accepts one repository, with optional root-license-file evidence and notes.
 - Required labels: `candidate:fast-track` and `status:queued`. Create both labels in the repository before using the form so they can be applied correctly.

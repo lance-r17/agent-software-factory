@@ -103,6 +103,8 @@ Pages 或 Issue Form 提交的 fast track Issue 由 `fast_track.py review` 解�
 
 registry 切换后，本地 state 只是缓存。每天先运行 `registry_sync.py verify`，变更完成后运行 `export` 并创建 registry PR；不得以本地旧值直接覆盖 registry。机器故障后从 registry 执行 `rebuild`，恢复后的 candidates、researched 与 history 必须逐字段一致。Projects 只用于展示，不是唯一事实来源。
 
+Issue 关闭遵循 `issue_action`：duplicate 和 rejected 在评论后关闭，imported 必须等 registry PR 合并。Candidate Issue 由 `candidate_lifecycle.py` 判断关闭条件，入池本身不是关闭理由；关闭不得改变 registry 数据或 Projects 字段，History 视图保留关闭记录。
+
 ## 5. 评分与选择
 
 ```bash

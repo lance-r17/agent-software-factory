@@ -4,6 +4,7 @@ import sweAgentDeployMarkdownEn from '../../skills/deploy/en/swe-agent-legacy-de
 import agentlessDeployMarkdownEn from '../../skills/deploy/en/agentless-deploy/SKILL.md?raw'
 import metagptDeployMarkdownEn from '../../skills/deploy/en/metagpt-deploy/SKILL.md?raw'
 import sweAfDeployMarkdownEn from '../../skills/deploy/en/swe-af-deploy/SKILL.md?raw'
+import omnigentDeployMarkdownEn from '../../skills/deploy/en/omnigent-deploy/SKILL.md?raw'
 import type { DeploySkill } from './deploySkills'
 
 export const openHandsDeploySkillEn: DeploySkill = {
@@ -67,4 +68,15 @@ export const sweAfDeploySkillEn: DeploySkill = {
   routes: [{ id: 'A', label: 'Offline Python verification' }, { id: 'B', label: 'Python Compose' }, { id: 'C', label: 'Go node' }, { id: 'D', label: 'Single-Issue delegation' }],
   outline: ['00 Version contract and evidence boundary', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: offline Python verification', '04 Route B: Python Compose full stack', '05 Route C: Go node', '06 Route D: single-Issue delegation', '07 Recovery, state, and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
   content: sweAfDeployMarkdownEn,
+}
+
+
+export const omnigentDeploySkillEn: DeploySkill = {
+  slug: 'omnigent',
+  title: 'Omnigent deployment manual',
+  description: 'An independent SKILL.md instruction set pinning v0.23.0 and its commit, with level-B wheel, CLI, and Polly spec checks, four offline / local / Docker / Polly routes, and explicit Agent contracts, secrets, sandboxes, review, and human-merge gates.',
+  version: 'Omnigent v0.23.0', verifyDate: '2026-11-25', fileName: 'omnigent-deploy-en.md', accent: 'blue',
+  routes: [{ id: 'A', label: 'Offline package and spec checks' }, { id: 'B', label: 'Local control layer' }, { id: 'C', label: 'Docker + Postgres' }, { id: 'D', label: 'Polly parallel engineering' }],
+  outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: pinned offline verification', '04 Route B: local control layer', '05 Route C: Docker service', '06 Route D: Polly parallel engineering', '07 Agent contracts and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
+  content: omnigentDeployMarkdownEn,
 }

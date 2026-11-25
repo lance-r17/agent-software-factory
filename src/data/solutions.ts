@@ -19,6 +19,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'loom', title: 'Loom', subtitle: '用 Rust MCP 状态机，把编码 Agent 变成可恢复的交付环',
+    description: 'Apache-2.0 开放交付 harness：请求清单、字段组读取、writeTargets 与 TaskResult 串联澄清、计划、执行、评审、修复和本地预览。固定 0.3.0 · main@fc4c0ba；脚本语法与 7 项 Python 测试通过，Release、Rust、真实模型和 Docker 未实测。',
+    version: 'v0.3.0 · main@fc4c0ba', license: 'Apache-2.0', stars: '状态化交付', verifiedAt: '2026-11-26',
+    tags: ['Rust MCP', 'Python ≥ 3.11', '.loom 状态', '本地 Compose 预览'], category: '仓库自治', tone: 'yellow',
+  },
+  {
     slug: 'omnigent', title: 'Omnigent', subtitle: '把异构编码 Agent 纳入同一控制、协作与策略层',
     description: 'Apache-2.0 多 Agent 元 harness：统一 CLI / Web UI、服务与执行宿主，Agent YAML 声明子 Agent 和策略；Polly 示例以并行 worktree、固定 diff 和跨供应商评审交付 PR。固定 v0.23.0；仅实测安装、CLI 与规格解析。',
     version: 'v0.23.0', license: 'Apache-2.0', stars: '多 Agent 控制层', verifiedAt: '2026-11-25',
@@ -67,6 +73,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'loom', title: 'Loom', subtitle: 'A Rust MCP state machine turns a coding Agent into a recoverable delivery loop',
+    description: 'An Apache-2.0 open delivery harness: request manifests, field-group reads, writeTargets, and TaskResults connect clarification, planning, execution, review, repair, and local preview. Pins 0.3.0 · main@fc4c0ba; syntax and seven Python tests passed, while Release, Rust, real models, and Docker were not tested.',
+    version: 'v0.3.0 · main@fc4c0ba', license: 'Apache-2.0', stars: 'Stateful delivery', verifiedAt: '2026-11-26',
+    tags: ['Rust MCP', 'Python ≥ 3.11', '.loom state', 'Local Compose preview'], category: '仓库自治', tone: 'yellow',
+  },
   {
     slug: 'omnigent', title: 'Omnigent', subtitle: 'One control, collaboration, and policy layer for heterogeneous coding Agents',
     description: 'An Apache-2.0 multi-Agent meta-harness with shared CLI / Web UI, server, and execution hosts. Agent YAML declares sub-agents and policies, while Polly demonstrates parallel worktrees, pinned diffs, and cross-vendor review before PR delivery. Pins v0.23.0; only installation, CLI, and spec parsing were tested.',

@@ -5,6 +5,7 @@ import agentlessDeployMarkdown from '../../skills/deploy/zh-CN/agentless-deploy/
 import metagptDeployMarkdown from '../../skills/deploy/zh-CN/metagpt-deploy/SKILL.md?raw'
 import sweAfDeployMarkdown from '../../skills/deploy/zh-CN/swe-af-deploy/SKILL.md?raw'
 import omnigentDeployMarkdown from '../../skills/deploy/zh-CN/omnigent-deploy/SKILL.md?raw'
+import loomDeployMarkdown from '../../skills/deploy/zh-CN/loom-deploy/SKILL.md?raw'
 export type DeploySkill = {
   slug: string
   fileName: string
@@ -236,4 +237,36 @@ export const omnigentDeploySkill: DeploySkill = {
     '11 · 官方来源',
   ],
   content: omnigentDeployMarkdown,
+}
+
+
+export const loomDeploySkill: DeploySkill = {
+  slug: 'loom',
+  fileName: 'loom-deploy.md',
+  title: 'Loom 部署 Skill',
+  description: 'SKILL.md 格式的独立部署指令：固定 0.3.0 与 fc4c0ba，记录脚本语法、7 项 Python 测试和 Release／Rust 未测边界，内置离线源码、官方插件、交付恢复和本地 Compose 预览四条路线，以及 MCP 合同、状态、密钥与人工交付门禁。',
+  version: 'v0.3.0 · main@fc4c0ba',
+  verifyDate: '2026-11-26',
+  accent: 'yellow',
+  routes: [
+    { id: 'A', label: '离线源码核验' },
+    { id: 'B', label: '官方 Agent 插件' },
+    { id: 'C', label: '交付与恢复' },
+    { id: 'D', label: '本地 Compose 预览' },
+  ],
+  outline: [
+    '0 · 版本合同与证据边界',
+    '1 · 硬性前置检查',
+    '2 · 四条部署路线选择表',
+    '3 · 路线 A：固定源码离线核验',
+    '4 · 路线 B：官方插件与只读冒烟',
+    '5 · 路线 C：真实交付、评审与恢复',
+    '6 · 路线 D：本地 Docker Compose 预览',
+    '7 · MCP 合同与自动化门禁',
+    '8 · 八道验收闸门',
+    '9 · 常见故障速查',
+    '10 · 升级、备份与安全红线',
+    '11 · 官方来源',
+  ],
+  content: loomDeployMarkdown,
 }

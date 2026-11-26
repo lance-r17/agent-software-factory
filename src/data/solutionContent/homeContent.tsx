@@ -21,7 +21,7 @@ const zh = {
     kicker: 'DAILY OPEN-SOURCE FIELD NOTES · 2026',
     title: <>把“用 Agent<br />写软件的工厂”<span className="whitespace-nowrap">拆成</span><br /><span className="circled">可复现的图纸</span></>,
     body: '每天只选一个开源方案，从官方资料拆解它的架构、运行链路、本地部署与安全边界。少一点功能罗列，多一点真正跑得通的证据。',
-    browse: '浏览方案库', latest: '最新：Loom v0.3.0', sketchAria: '从需求、规划、编码、测试到人工验收交付的 Agent 软件工厂流程示意图', sketchTitle: '一座 Agent 工厂的纸面模型',
+    browse: '浏览方案库', latest: '最新：ASE 2.1.6', sketchAria: '从需求、规划、编码、测试到人工验收交付的 Agent 软件工厂流程示意图', sketchTitle: '一座 Agent 工厂的纸面模型',
     nodes: ['需求与仓库上下文', '任务规划与角色编排', '沙箱执行与自主修正', '测试、评审与人工验收'], sketchFooter: '交付的是可运行代码，不是一段聊天记录。',
   },
   library: {
@@ -37,6 +37,7 @@ const zh = {
   },
   changelog: {
     kicker: '03 · CHANGELOG', title: '调研更新记录', entries: [
+      { date: '2026-11-27', tone: 'green', title: '收录 ASE 2.1.6 · tag@8c1c959', body: 'Claude Code 工程插件、数十个技能、命名任务、Task Store、enterprise 生命周期与可选 Agent Fleet；隔离发布包、Node 22.22 CLI、MCP 列表和 Fleet 配置生成通过，真实模型与 Fleet 启动未执行。' },
       { date: '2026-11-26', tone: 'yellow', title: '收录 Loom v0.3.0 · main@fc4c0ba', body: 'Rust MCP 交付状态机、请求清单、字段组读取、TaskResult、评审修复与 .loom 恢复；脚本语法和 7 项 Python 测试通过，Release、Rust、真实模型与 Docker 未执行。' },
       { date: '2026-11-25', tone: 'blue', title: '收录 Omnigent v0.23.0', body: '多 harness 控制层、Agent YAML、策略与沙箱边界、Polly 并行 worktree 和跨供应商评审；官方 wheel、双 CLI 与 Polly 严格规格解析通过，真实模型与 PR 未执行。' },
       { date: '2026-11-24', tone: 'green', title: '收录 SWE-AF main@0de5364', body: 'AgentField 工程节点、Issue DAG、worktree 并行、三层失败控制、技术债与 checkpoint；Python 隔离实测 2,641 项测试通过，真实模型与 Go 未执行。' },
@@ -56,7 +57,7 @@ const en = {
     kicker: 'DAILY OPEN-SOURCE FIELD NOTES · 2026',
     title: <>Make “factories that<br />write software with Agents”<br /><span className="circled">reproducible.</span></>,
     body: 'Every day, we select one open-source solution and use official sources to map its architecture, runtime workflow, local deployment, and security boundaries. Less feature-listing, more evidence you can run.',
-    browse: 'Browse the library', latest: 'Latest: Loom v0.3.0', sketchAria: 'An Agent software factory pipeline from a requirement through planning, coding, and testing to a human-reviewed delivery', sketchTitle: 'An Agent factory, on paper',
+    browse: 'Browse the library', latest: 'Latest: ASE 2.1.6', sketchAria: 'An Agent software factory pipeline from a requirement through planning, coding, and testing to a human-reviewed delivery', sketchTitle: 'An Agent factory, on paper',
     nodes: ['Requirement & repository context', 'Task planning & role orchestration', 'Sandboxed implementation & self-review', 'Tests, review & human acceptance'], sketchFooter: 'Working software, not a chat log.',
   },
   library: {
@@ -72,6 +73,7 @@ const en = {
   },
   changelog: {
     kicker: '03 · CHANGELOG', title: 'Research log', entries: [
+      { date: '2026-11-27', tone: 'green', title: 'ASE 2.1.6 · tag@8c1c959 added', body: 'Claude Code engineering plugin, dozens of skills, named tasks, Task Store, enterprise lifecycle, and optional Agent Fleet; isolated Release, Node 22.22 CLI, MCP listing, and Fleet configuration passed, while real models and Fleet startup were not executed.' },
       { date: '2026-11-26', tone: 'yellow', title: 'Loom v0.3.0 · main@fc4c0ba added', body: 'Rust MCP delivery state, request manifests, field-group reads, TaskResults, review and repair, plus .loom recovery; syntax and seven Python tests passed, while Release, Rust, real models, and Docker were not executed.' },
       { date: '2026-11-25', tone: 'blue', title: 'Omnigent v0.23.0 added', body: 'Multi-harness control, Agent YAML, policy and sandbox boundaries, Polly parallel worktrees, and cross-vendor review; official wheel, both CLIs, and strict Polly spec parsing passed, while real models and PRs were not executed.' },
       { date: '2026-11-24', tone: 'green', title: 'SWE-AF main@0de5364 added', body: 'AgentField engineering nodes, Issue DAG, worktree parallelism, three-tier failure control, technical debt, and checkpoints; 2,641 isolated Python tests passed, while real models and Go were not executed.' },

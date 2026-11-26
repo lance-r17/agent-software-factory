@@ -19,6 +19,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'ase', title: 'ASE', subtitle: '用持久任务、工程技能和可选 Fleet 组织 Agent 软件工程',
+    description: '围绕 Claude Code 的 Apache-2.0 工程工具箱，对 Copilot / Codex 提供较弱支持：插件、数十个技能、CLI / MCP、任务看板与附件串联计划、draft、实现、资格和集成。固定 2.1.6；实测隔离安装、Node 22.22 CLI 与 enterprise Fleet 配置生成，真实模型和 Fleet 启动未执行。',
+    version: '2.1.6 · tag@8c1c959', license: 'Apache-2.0', stars: '任务驱动工程', verifiedAt: '2026-11-27',
+    tags: ['Node ≥22.22', 'Claude Code', 'Task Store', '可选 Agent Fleet'], category: '仓库自治', tone: 'green',
+  },
+  {
     slug: 'loom', title: 'Loom', subtitle: '用 Rust MCP 状态机，把编码 Agent 变成可恢复的交付环',
     description: 'Apache-2.0 开放交付 harness：请求清单、字段组读取、writeTargets 与 TaskResult 串联澄清、计划、执行、评审、修复和本地预览。固定 0.3.0 · main@fc4c0ba；脚本语法与 7 项 Python 测试通过，Release、Rust、真实模型和 Docker 未实测。',
     version: 'v0.3.0 · main@fc4c0ba', license: 'Apache-2.0', stars: '状态化交付', verifiedAt: '2026-11-26',
@@ -73,6 +79,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'ase', title: 'ASE', subtitle: 'Persistent tasks, engineering skills, and an optional Fleet organize Agentic Software Engineering',
+    description: 'An Apache-2.0 toolkit built primarily around Claude Code, with reduced Copilot / Codex support. Its plugin, dozens of skills, CLI / MCP, task boards, and attachments connect plans, drafts, implementation, qualification, and integration. Pins 2.1.6; isolated installation, Node 22.22 CLI, and enterprise Fleet configuration were tested, while real models and Fleet startup were not.',
+    version: '2.1.6 · tag@8c1c959', license: 'Apache-2.0', stars: 'Task-driven engineering', verifiedAt: '2026-11-27',
+    tags: ['Node ≥22.22', 'Claude Code', 'Task Store', 'Optional Agent Fleet'], category: '仓库自治', tone: 'green',
+  },
   {
     slug: 'loom', title: 'Loom', subtitle: 'A Rust MCP state machine turns a coding Agent into a recoverable delivery loop',
     description: 'An Apache-2.0 open delivery harness: request manifests, field-group reads, writeTargets, and TaskResults connect clarification, planning, execution, review, repair, and local preview. Pins 0.3.0 · main@fc4c0ba; syntax and seven Python tests passed, while Release, Rust, real models, and Docker were not tested.',

@@ -6,6 +6,7 @@ import metagptDeployMarkdown from '../../skills/deploy/zh-CN/metagpt-deploy/SKIL
 import sweAfDeployMarkdown from '../../skills/deploy/zh-CN/swe-af-deploy/SKILL.md?raw'
 import omnigentDeployMarkdown from '../../skills/deploy/zh-CN/omnigent-deploy/SKILL.md?raw'
 import loomDeployMarkdown from '../../skills/deploy/zh-CN/loom-deploy/SKILL.md?raw'
+import aseDeployMarkdown from '../../skills/deploy/zh-CN/ase-deploy/SKILL.md?raw'
 export type DeploySkill = {
   slug: string
   fileName: string
@@ -269,4 +270,36 @@ export const loomDeploySkill: DeploySkill = {
     '11 · 官方来源',
   ],
   content: loomDeployMarkdown,
+}
+
+
+export const aseDeploySkill: DeploySkill = {
+  slug: 'ase',
+  fileName: 'ase-deploy.md',
+  title: 'ASE 部署 Skill',
+  description: 'SKILL.md 格式的独立部署指令：固定 2.1.6 与 8c1c959，记录 npm 包、Node 22.22 CLI、MCP 列表和 enterprise Fleet 配置的 B 级实测，内置发布包、官方插件、命名任务和 Agent Fleet 四条路线，以及 Task Store、密钥、独立工作副本与人工交付门禁。',
+  version: '2.1.6 · tag@8c1c959',
+  verifyDate: '2026-11-27',
+  accent: 'green',
+  routes: [
+    { id: 'A', label: '发布包与 CLI 核验' },
+    { id: 'B', label: '官方 Agent 插件' },
+    { id: 'C', label: '命名任务与 draft' },
+    { id: 'D', label: 'Agent Fleet' },
+  ],
+  outline: [
+    '0 · 版本合同与证据边界',
+    '1 · 硬性前置检查',
+    '2 · 四条部署路线选择表',
+    '3 · 路线 A：固定 Release 隔离核验',
+    '4 · 路线 B：官方插件与只读状态',
+    '5 · 路线 C：命名任务、draft 与实现',
+    '6 · 路线 D：Agent Fleet',
+    '7 · Task Store 与自动化门禁',
+    '8 · 八道验收闸门',
+    '9 · 常见故障速查',
+    '10 · 升级、备份与安全红线',
+    '11 · 官方来源',
+  ],
+  content: aseDeployMarkdown,
 }

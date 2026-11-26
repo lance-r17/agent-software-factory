@@ -5,6 +5,7 @@ import agentlessDeployMarkdownEn from '../../skills/deploy/en/agentless-deploy/S
 import metagptDeployMarkdownEn from '../../skills/deploy/en/metagpt-deploy/SKILL.md?raw'
 import sweAfDeployMarkdownEn from '../../skills/deploy/en/swe-af-deploy/SKILL.md?raw'
 import omnigentDeployMarkdownEn from '../../skills/deploy/en/omnigent-deploy/SKILL.md?raw'
+import loomDeployMarkdownEn from '../../skills/deploy/en/loom-deploy/SKILL.md?raw'
 import type { DeploySkill } from './deploySkills'
 
 export const openHandsDeploySkillEn: DeploySkill = {
@@ -79,4 +80,15 @@ export const omnigentDeploySkillEn: DeploySkill = {
   routes: [{ id: 'A', label: 'Offline package and spec checks' }, { id: 'B', label: 'Local control layer' }, { id: 'C', label: 'Docker + Postgres' }, { id: 'D', label: 'Polly parallel engineering' }],
   outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: pinned offline verification', '04 Route B: local control layer', '05 Route C: Docker service', '06 Route D: Polly parallel engineering', '07 Agent contracts and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
   content: omnigentDeployMarkdownEn,
+}
+
+
+export const loomDeploySkillEn: DeploySkill = {
+  slug: 'loom',
+  title: 'Loom deployment manual',
+  description: 'An independent SKILL.md instruction set pinning 0.3.0 and fc4c0ba, with syntax and seven Python checks plus explicit Release / Rust boundaries, four offline / plugin / delivery / local-preview routes, and MCP contracts, state, secrets, and human-delivery gates.',
+  version: 'Loom v0.3.0 · main@fc4c0ba', verifyDate: '2026-11-26', fileName: 'loom-deploy-en.md', accent: 'yellow',
+  routes: [{ id: 'A', label: 'Offline source checks' }, { id: 'B', label: 'Official Agent plugin' }, { id: 'C', label: 'Delivery and recovery' }, { id: 'D', label: 'Local Compose preview' }],
+  outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: pinned offline source verification', '04 Route B: official plugin and read-only smoke', '05 Route C: real delivery, review, and recovery', '06 Route D: local Docker Compose preview', '07 MCP contracts and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
+  content: loomDeployMarkdownEn,
 }

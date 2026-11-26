@@ -68,7 +68,7 @@ export default function Home({ locale = 'zh' }: { locale?: Locale }) {
         <p>{c.hero.body}</p>
         <div className="hero-actions">
           <Link className="primary-link" to={{ pathname: homePath, hash: '#library' }}>{c.hero.browse} <ArrowDown size={18} /></Link>
-          <Link className="text-link" to={isEnglish ? '/en/solutions/omnigent' : '/solutions/omnigent'}>{c.hero.latest} <ArrowRight size={17} /></Link>
+          <Link className="text-link" to={isEnglish ? '/en/solutions/loom' : '/solutions/loom'}>{c.hero.latest} <ArrowRight size={17} /></Link>
           <Link className="text-link" to={{ pathname: homePath, hash: '#submit' }}>{isEnglish ? 'Submit a candidate' : '推荐开源项目'} <ArrowUpRight size={16} /></Link>
         </div>
       </div>

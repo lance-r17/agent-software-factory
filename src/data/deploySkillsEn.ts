@@ -6,6 +6,7 @@ import metagptDeployMarkdownEn from '../../skills/deploy/en/metagpt-deploy/SKILL
 import sweAfDeployMarkdownEn from '../../skills/deploy/en/swe-af-deploy/SKILL.md?raw'
 import omnigentDeployMarkdownEn from '../../skills/deploy/en/omnigent-deploy/SKILL.md?raw'
 import loomDeployMarkdownEn from '../../skills/deploy/en/loom-deploy/SKILL.md?raw'
+import aseDeployMarkdownEn from '../../skills/deploy/en/ase-deploy/SKILL.md?raw'
 import type { DeploySkill } from './deploySkills'
 
 export const openHandsDeploySkillEn: DeploySkill = {
@@ -91,4 +92,15 @@ export const loomDeploySkillEn: DeploySkill = {
   routes: [{ id: 'A', label: 'Offline source checks' }, { id: 'B', label: 'Official Agent plugin' }, { id: 'C', label: 'Delivery and recovery' }, { id: 'D', label: 'Local Compose preview' }],
   outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: pinned offline source verification', '04 Route B: official plugin and read-only smoke', '05 Route C: real delivery, review, and recovery', '06 Route D: local Docker Compose preview', '07 MCP contracts and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
   content: loomDeployMarkdownEn,
+}
+
+
+export const aseDeploySkillEn: DeploySkill = {
+  slug: 'ase',
+  title: 'ASE deployment manual',
+  description: 'An independent SKILL.md instruction set pinning 2.1.6 and 8c1c959, with level-B npm, Node 22.22 CLI, MCP-list, and enterprise Fleet-configuration checks, four Release / plugin / named-task / Fleet routes, and Task Store, secret, separate-working-copy, and human-delivery gates.',
+  version: 'ASE 2.1.6 · tag@8c1c959', verifyDate: '2026-11-27', fileName: 'ase-deploy-en.md', accent: 'green',
+  routes: [{ id: 'A', label: 'Release and CLI checks' }, { id: 'B', label: 'Official Agent plugin' }, { id: 'C', label: 'Named tasks and drafts' }, { id: 'D', label: 'Agent Fleet' }],
+  outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: pinned Release checks in isolation', '04 Route B: official plugin and read-only status', '05 Route C: named tasks, drafts, and implementation', '06 Route D: Agent Fleet', '07 Task Store and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
+  content: aseDeployMarkdownEn,
 }

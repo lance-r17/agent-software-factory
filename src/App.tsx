@@ -9,6 +9,7 @@ import SweAf from './pages/SweAf'
 import Omnigent from './pages/Omnigent'
 import Loom from './pages/Loom'
 import Ase from './pages/Ase'
+import Scion from './pages/Scion'
 import ArchivePage from './pages/Archive'
 import NotFound from './pages/NotFound'
 
@@ -24,6 +25,7 @@ export default function App() {
     <Route path="/solutions/omnigent" element={<Omnigent locale="zh" />} />
     <Route path="/solutions/loom" element={<Loom locale="zh" />} />
     <Route path="/solutions/ase" element={<Ase locale="zh" />} />
+    <Route path="/solutions/scion" element={<Scion locale="zh" />} />
     <Route path="/archive" element={<ArchivePage locale="zh" />} />
     <Route path="/en" element={<Home locale="en" />} />
     <Route path="/en/solutions/mini-swe-agent" element={<MiniSweAgent locale="en" />} />
@@ -35,6 +37,7 @@ export default function App() {
     <Route path="/en/solutions/omnigent" element={<Omnigent locale="en" />} />
     <Route path="/en/solutions/loom" element={<Loom locale="en" />} />
     <Route path="/en/solutions/ase" element={<Ase locale="en" />} />
+    <Route path="/en/solutions/scion" element={<Scion locale="en" />} />
     <Route path="/en/archive" element={<ArchivePage locale="en" />} />
     <Route path="*" element={<NotFound />} />
   </Routes>

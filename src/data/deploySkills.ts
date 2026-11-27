@@ -7,6 +7,7 @@ import sweAfDeployMarkdown from '../../skills/deploy/zh-CN/swe-af-deploy/SKILL.m
 import omnigentDeployMarkdown from '../../skills/deploy/zh-CN/omnigent-deploy/SKILL.md?raw'
 import loomDeployMarkdown from '../../skills/deploy/zh-CN/loom-deploy/SKILL.md?raw'
 import aseDeployMarkdown from '../../skills/deploy/zh-CN/ase-deploy/SKILL.md?raw'
+import scionDeployMarkdown from '../../skills/deploy/zh-CN/scion-deploy/SKILL.md?raw'
 export type DeploySkill = {
   slug: string
   fileName: string
@@ -302,4 +303,36 @@ export const aseDeploySkill: DeploySkill = {
     '11 · 官方来源',
   ],
   content: aseDeployMarkdown,
+}
+
+
+export const scionDeploySkill: DeploySkill = {
+  slug: 'scion',
+  fileName: 'scion-deploy.md',
+  title: 'Scion 部署 Skill',
+  description: 'SKILL.md 格式的独立部署指令：固定 v0.3.0 与 7035829，明确 C 级证据边界，内置 Release、Workstation、角色与隔离 workspace、Hosted Hub 四条路线，以及状态、密钥、Runtime、备份、成本和人工交付门禁。',
+  version: 'v0.3.0 · tag@7035829',
+  verifyDate: '2026-11-28',
+  accent: 'blue',
+  routes: [
+    { id: 'A', label: '固定 Release 核验' },
+    { id: 'B', label: '本机 Workstation' },
+    { id: 'C', label: '角色与隔离 workspace' },
+    { id: 'D', label: 'Hosted Hub / HA' },
+  ],
+  outline: [
+    '0 · 版本合同与 C 级证据边界',
+    '1 · 硬性前置检查（Go / Git / Runtime）',
+    '2 · 四条部署路线选择表',
+    '3 · 路线 A：固定 Release 与 SHA256SUMS',
+    '4 · 路线 B：本机 Workstation',
+    '5 · 路线 C：角色模板、harness-config 与 workspace',
+    '6 · 路线 D：Hosted Hub / HA',
+    '7 · 状态、自动化与证据门禁',
+    '8 · 八道验收闸门',
+    '9 · 常见故障速查',
+    '10 · 升级、备份与成本控制',
+    '11 · 安全红线与官方来源',
+  ],
+  content: scionDeployMarkdown,
 }

@@ -7,6 +7,7 @@ import sweAfDeployMarkdownEn from '../../skills/deploy/en/swe-af-deploy/SKILL.md
 import omnigentDeployMarkdownEn from '../../skills/deploy/en/omnigent-deploy/SKILL.md?raw'
 import loomDeployMarkdownEn from '../../skills/deploy/en/loom-deploy/SKILL.md?raw'
 import aseDeployMarkdownEn from '../../skills/deploy/en/ase-deploy/SKILL.md?raw'
+import scionDeployMarkdownEn from '../../skills/deploy/en/scion-deploy/SKILL.md?raw'
 import type { DeploySkill } from './deploySkills'
 
 export const openHandsDeploySkillEn: DeploySkill = {
@@ -103,4 +104,15 @@ export const aseDeploySkillEn: DeploySkill = {
   routes: [{ id: 'A', label: 'Release and CLI checks' }, { id: 'B', label: 'Official Agent plugin' }, { id: 'C', label: 'Named tasks and drafts' }, { id: 'D', label: 'Agent Fleet' }],
   outline: ['00 Version contract and evidence boundaries', '01 Hard prerequisites', '02 Four-route selection table', '03 Route A: pinned Release checks in isolation', '04 Route B: official plugin and read-only status', '05 Route C: named tasks, drafts, and implementation', '06 Route D: Agent Fleet', '07 Task Store and automation gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and security red lines', '11 Official sources'],
   content: aseDeployMarkdownEn,
+}
+
+
+export const scionDeploySkillEn: DeploySkill = {
+  slug: 'scion',
+  title: 'Scion deployment manual',
+  description: 'An independent SKILL.md instruction set pinning v0.3.0 and 7035829 with explicit level-C evidence boundaries, four Release / Workstation / role-and-workspace / Hosted-Hub routes, and state, secret, Runtime, backup, cost, and human-delivery gates.',
+  version: 'Scion v0.3.0 · tag@7035829', verifyDate: '2026-11-28', fileName: 'scion-deploy-en.md', accent: 'blue',
+  routes: [{ id: 'A', label: 'Pinned Release checks' }, { id: 'B', label: 'Local Workstation' }, { id: 'C', label: 'Roles and isolated workspaces' }, { id: 'D', label: 'Hosted Hub / HA' }],
+  outline: ['00 Version contract and level-C evidence boundaries', '01 Hard prerequisites (Go / Git / Runtime)', '02 Four-route selection table', '03 Route A: pinned Release and SHA256SUMS', '04 Route B: local Workstation', '05 Route C: role templates, harness configs, and workspaces', '06 Route D: Hosted Hub / HA', '07 State, automation, and evidence gates', '08 Eight acceptance gates', '09 Troubleshooting', '10 Upgrades, backups, and cost control', '11 Security red lines and official sources'],
+  content: scionDeployMarkdownEn,
 }

@@ -19,6 +19,12 @@ export type Solution = {
 
 export const solutions: Solution[] = [
   {
+    slug: 'scion', title: 'Scion', subtitle: '用 Hub、Runtime Broker 与隔离工作区组织异构 Agent 协作',
+    description: 'Apache-2.0 多 Agent 与人员协作平台：统一身份、状态和分派，连接 Docker、Podman、Kubernetes、Cloud Run 等 Runtime；模板、Skill Bank 和四类 workspace 复用角色与隔离策略。固定 v0.3.0 · tag@7035829；本次仅 C 级文档与源码核验，CLI、容器和真实模型未运行。',
+    version: 'v0.3.0 · tag@7035829', license: 'Apache-2.0', stars: '多 Agent 控制面', verifiedAt: '2026-11-28',
+    tags: ['Hub + Broker', '多 harness', '四类 Workspace', 'Hosted / HA'], category: '仓库自治', tone: 'blue',
+  },
+  {
     slug: 'ase', title: 'ASE', subtitle: '用持久任务、工程技能和可选 Fleet 组织 Agent 软件工程',
     description: '围绕 Claude Code 的 Apache-2.0 工程工具箱，对 Copilot / Codex 提供较弱支持：插件、数十个技能、CLI / MCP、任务看板与附件串联计划、draft、实现、资格和集成。固定 2.1.6；实测隔离安装、Node 22.22 CLI 与 enterprise Fleet 配置生成，真实模型和 Fleet 启动未执行。',
     version: '2.1.6 · tag@8c1c959', license: 'Apache-2.0', stars: '任务驱动工程', verifiedAt: '2026-11-27',
@@ -79,6 +85,12 @@ export const solutions: Solution[] = [
 ]
 
 export const solutionsEn: Solution[] = [
+  {
+    slug: 'scion', title: 'Scion', subtitle: 'A Hub, Runtime Brokers, and isolated workspaces organize heterogeneous Agent collaboration',
+    description: 'An Apache-2.0 collaboration platform for Agents and people: centralized identity, state, and dispatch connect to Docker, Podman, Kubernetes, Cloud Run, and other Runtimes. Templates, a Skill Bank, and four workspace modes reuse roles and isolation strategies. Pins v0.3.0 · tag@7035829; level-C documentation and source review only, with no CLI, container, or real-model execution.',
+    version: 'v0.3.0 · tag@7035829', license: 'Apache-2.0', stars: 'Multi-Agent control plane', verifiedAt: '2026-11-28',
+    tags: ['Hub + Broker', 'Multi-harness', 'Four workspace modes', 'Hosted / HA'], category: '仓库自治', tone: 'blue',
+  },
   {
     slug: 'ase', title: 'ASE', subtitle: 'Persistent tasks, engineering skills, and an optional Fleet organize Agentic Software Engineering',
     description: 'An Apache-2.0 toolkit built primarily around Claude Code, with reduced Copilot / Codex support. Its plugin, dozens of skills, CLI / MCP, task boards, and attachments connect plans, drafts, implementation, qualification, and integration. Pins 2.1.6; isolated installation, Node 22.22 CLI, and enterprise Fleet configuration were tested, while real models and Fleet startup were not.',
